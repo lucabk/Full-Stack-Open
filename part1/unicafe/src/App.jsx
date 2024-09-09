@@ -10,6 +10,16 @@ const Statistics = ({good, neutral, bad}) => {
   const sum = () => good+neutral+bad
   const avg = () => (good+bad*(-1))/sum()
   const pos = () => good*100/sum()
+
+  //conditional rendering
+  if (good===0 && neutral===0 && bad===0){
+    return(
+      <div>
+        <h1>statistics</h1>
+        No feedback given
+      </div>
+    )
+  }
   
   return (
     <div>
