@@ -13,5 +13,5 @@ The repository is organized into the following parts, each corresponding to diff
 - **part1**:
    - **courseinfo**: A project to create a simple course information page using React, covering the basics of components, props, and state management.
   - **unicafe**: A project for building a feedback application for a café, focusing on handling state in React and understanding how to pass data between components.
-
+  -**anecdotes**: A project that allows users to vote on anecdotes, demonstrating further state management in React.
 
