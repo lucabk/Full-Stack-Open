@@ -16,6 +16,11 @@ const App = () => {
   const clickHandlerNeutral = (newValue) => () => setNeutral(newValue)
   const clickHandlerBad = (newValue) => () => setBad(newValue)  
 
+  //statistical functions
+  const sum = () => good+neutral+bad
+  const avg = () => (good+bad*(-1))/sum()
+  const pos = () => good*100/sum()
+
   return (
     <div>
       <h1>give feedback</h1>
@@ -27,6 +32,10 @@ const App = () => {
       <p>good {good}</p>
       <p>neutral {neutral}</p>
       <p>bad {bad}</p>
+
+      <p>all {sum()}</p>
+      <p>average {avg()}</p>
+      <p>positive {pos()} %</p>
     </div>
   )
 }
