@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
-
 const Button = ({arr, index, onCLicknextAn, vote, onCLickVote}) =>{
   //display new anecdotes
   return(
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{arr[index]}</p>
       <Vote vote={vote} index={index} onCLickVote={onCLickVote}/>
       <br></br>
@@ -19,7 +19,7 @@ const Button = ({arr, index, onCLicknextAn, vote, onCLickVote}) =>{
 const Vote = ({vote, index, onCLickVote}) => {
   //update the votes with the button
   console.log("vote",vote)
-  console.log("index",index)
+  console.log("anecdote index",index)
 
   return(
     <div>
@@ -30,6 +30,36 @@ const Vote = ({vote, index, onCLickVote}) => {
     </div>
   )
 }
+
+
+
+const MostVote = ({arr, vote}) => {
+  //max value in the vote array
+  const max = vote.reduce((acc, act) => (act > acc ? act : acc), 0)
+  //index where the max is stored
+  const index = vote.indexOf(max)
+  console.log("max is",max," at index",index) 
+
+  //conditional rendering
+  if (max === 0){
+    return(
+      <div>
+        <h1>Anecdote with most vote</h1>
+        None
+      </div>
+    )
+  }
+
+  return(
+    <div>
+      <h1>Anecdote with most vote</h1>
+      <p>{arr[index]}</p>
+      <p>has {max} votes</p>
+    </div>
+  )
+}
+
+
 
 const App = () => {
   const anecdotes = [
@@ -51,7 +81,7 @@ const App = () => {
   //Event handler
   //change anectode
   const clickHandlerAn = () => {
-    //will give you a random integer between 0 and the length of the array, inclusive:
+    //will give a random integer between 0 and the length of the array, inclusive
     let index =  Math.floor(Math.random() * anecdotes.length) 
     setSelected(index)
   }
@@ -71,6 +101,10 @@ const App = () => {
 
         vote={vote}
         onCLickVote={clickHandlerVote}
+        />
+        <MostVote 
+          arr={anecdotes} 
+          vote={vote}
         />
     </div>
   )
