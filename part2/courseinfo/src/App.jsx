@@ -2,13 +2,12 @@
 const Header = ({ course }) => <h1>{course}</h1>
 
 
-//Number of exercises 31
-const Total = ({ sum }) => <p>Number of exercises {sum}</p>
+//Tot number of exercises 
+const Total = ({ sum }) => <p><strong>total of {sum} exercises</strong></p>
 
 
-//single course
+//show courses
 const Content = ({ parts }) => parts.map( item => <Part key={item.id} part={item}/>)
-
 
 const Part = ({ part }) => 
   <p>
@@ -17,10 +16,15 @@ const Part = ({ part }) =>
 
 
 const Course = ({course}) => {
+  //compute the sum of ex
+  const arr = course.parts
+  const sum = arr.reduce( (cont, act) => cont+act.exercises,0)
+
   return(
     <div>
       <Header course={course.name}/>
       <Content parts={course.parts}/>
+      <Total sum={sum}/>
     </div>
   )
 }
@@ -47,8 +51,8 @@ const App = () => {
         id: 3
       },
       {
-        name: 'State of a variable',
-        exercises: 13,
+        name: 'Redux',
+        exercises: 11,
         id: 4
       }
     ]
