@@ -6,11 +6,14 @@ const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
     { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
   ]) 
 
   //controlled components
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
+  const [newName, setNewName] = useState('') //new name
+  const [newNumber, setNewNumber] = useState('') //new number
+  const [search, setSearch] = useState('') //filter values
 
   //event hander for submit
   const addNumber = (event) => {
@@ -41,7 +44,7 @@ const App = () => {
     setNewName(event.target.value)
   }
   const handleNumberChange = (event) => {
-    console.log("set{newNumber}=",event.target.value)
+    console.log("set {newNumber}=",event.target.value)
     setNewNumber(event.target.value)
   }
 
@@ -55,10 +58,22 @@ const App = () => {
   }
 
 
+  //event handler for searching names
+  const handleSearch = (event) => {
+    console.log("set {search}=", event.target.value)
+    setSearch(event.target.value)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
-      
+      <div>filter shown with 
+        <input 
+          value={search}
+          onChange={handleSearch} />
+      </div>
+
+      <h2>add new</h2>
       <form onSubmit={addNumber}>
         <div>
           name: <input 
@@ -76,7 +91,7 @@ const App = () => {
       <h2>Numbers</h2>
     
       <ul>
-        {persons.map( person => <Numbers key={person.id} person={person}/>)}
+        {persons.map( person => <Numbers key={person.id} person={person} search={search}/>)}
       </ul>
       
     </div>
