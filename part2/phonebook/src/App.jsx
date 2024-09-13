@@ -15,14 +15,20 @@ const App = () => {
   const addNumber = (event) => {
     //prevent reloading after clicking the button
     event.preventDefault()
-    //create new obj to update the state (not directly!)
-    const newPersonObj = {
-      name : newName,
-      id : String(persons.length+1)
+    //check if the name is already in the list
+    if (checkName(newName)){
+          //create new obj to update the state (not directly!)
+      const newPersonObj = {
+        name : newName,
+        id : String(persons.length+1)
+      }
+      //create new state with a new obj
+      setPersons(persons.concat(newPersonObj))
     }
-    //create new state with a new obj
-    setPersons(persons.concat(newPersonObj))
-    //set the empyt value for the input element
+    else{
+      alert(`${newName} is already added to phonebook`)
+    }
+    //set the empyt value for the input element    
     setNewName("")
   }
 
@@ -32,6 +38,16 @@ const App = () => {
     setNewName(event.target.value)
   }
 
+  //return false if there is not a duplicate
+  const checkName = (name) => {
+    for (let i=0; i<persons.length; i++){
+      if (name === persons[i].name)
+        return false
+    }
+    return true
+  }
+
+  
   return (
     <div>
       <h2>Phonebook</h2>
