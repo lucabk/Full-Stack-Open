@@ -4,12 +4,13 @@ import Numbers from "./components/numbers"
 const App = () => {
   //numbers state
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', id: 1 },
-    { name: 'Ada Lovelace', id: 2 },
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
   ]) 
 
   //controlled components
   const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
   //event hander for submit
   const addNumber = (event) => {
@@ -20,6 +21,7 @@ const App = () => {
           //create new obj to update the state (not directly!)
       const newPersonObj = {
         name : newName,
+        number : newNumber,
         id : String(persons.length+1)
       }
       //create new state with a new obj
@@ -28,14 +30,19 @@ const App = () => {
     else{
       alert(`${newName} is already added to phonebook`)
     }
-    //set the empyt value for the input element    
+    //set the empyt value for the input elements    
     setNewName("")
+    setNewNumber("")
   }
 
-  //event handler for input value change
+  //event handler for input value changes
   const handleNameChange = (event) => {
     console.log("set {newName} =",event.target.value)
     setNewName(event.target.value)
+  }
+  const handleNumberChange = (event) => {
+    console.log("set{newNumber}=",event.target.value)
+    setNewNumber(event.target.value)
   }
 
   //return false if there is not a duplicate
@@ -47,7 +54,7 @@ const App = () => {
     return true
   }
 
-  
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -57,7 +64,11 @@ const App = () => {
           name: <input 
             value={newName}
             onChange={handleNameChange}/>
-          </div>
+        </div>
+        <div>number: <input 
+              value={newNumber}
+              onChange={handleNumberChange}/>
+        </div>  
         <div><button type="submit">add</button></div>
       </form>
 
