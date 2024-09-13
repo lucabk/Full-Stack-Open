@@ -9,6 +9,7 @@ const Numbers = ({person, search}) => {
             </div>
         )    
     }
+    //search for names
     else if (person.name.toLowerCase().includes(search.toLowerCase()) ){
         return(
             <div>
@@ -18,6 +19,7 @@ const Numbers = ({person, search}) => {
             </div>
         )        
     }
+    // return if there is no match found
     else   
         return    
 }
