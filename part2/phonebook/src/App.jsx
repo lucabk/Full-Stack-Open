@@ -1,21 +1,34 @@
-import { useState } from 'react'
+//effect hooks are used when fetching data from a server.
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Numbers from "./components/numbers"
 import Filter from './components/filter'
 import PersonForm from './components/personform'
 
 const App = () => {
-  //numbers state
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ]) 
+  //persons state
+  const [persons, setPersons] = useState([]) 
 
   //controlled components
   const [newName, setNewName] = useState('') //new name
   const [newNumber, setNewNumber] = useState('') //new number
   const [search, setSearch] = useState('') //filter values
+
+  //effect hooks
+  useEffect( () => {
+    axios
+      //promise
+      .get("http://localhost:3001/persons")
+      //event handler to access the result of the operation
+      .then( response => {
+        console.log("response data:", response.data)
+        /*stores the notes received from the server into the state a call
+        to a state-updating function triggers the re-rendering of the component*/
+        setPersons(response.data)
+      })
+  }, [])
+
+  console.log("persons=",persons)
 
   //event hander for submit
   const addNumber = (event) => {
