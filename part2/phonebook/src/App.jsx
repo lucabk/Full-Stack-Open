@@ -33,14 +33,14 @@ const App = () => {
   const addNumber = (event) => {
     //prevent reloading after clicking the button
     event.preventDefault()
-    //check if the name is already in the list
+    //create new obj to update the state (not directly!)
+    const newPersonObj = {
+      name : newName,
+      number : newNumber,
+    }    
+    //check if the name is not in the list
     if (!checkName(newName)){
-      //create new obj to update the state (not directly!)
-      const newPersonObj = {
-        name : newName,
-        number : newNumber,
-      }
-      //POST
+    //POST
     /*Since the data we sent in the POST request was a JavaScript object, 
     axios automatically knew to set the appropriate application/json 
     value for the Content-Type header.*/
@@ -53,13 +53,20 @@ const App = () => {
           console.log("server POST response", response)
           //update the state of the App component to render the new note
           setPersons(persons.concat(response))
-          console.log("persons length",persons.length)
         })
     }
     else{
-      alert(`${newName} is already added to phonebook`)
+      if(confirm(`${newPersonObj.name} is already added to phonebook, replace the old number with a new one?`)){
+        const oldPersonObj = persons.find( person => person.name === newPersonObj.name)
+        phoneService
+          .update(oldPersonObj.id, newPersonObj)
+          .then(response => {
+            console.log("server PUT response:", response)
+            setPersons(persons.map( person => person.name !== oldPersonObj.name ? person : response))
+          })
+      }
     }
-    //set the empyt value for the input elements    
+    //set empty values for the input elements    
     setNewName("")
     setNewNumber("")
   }
@@ -90,10 +97,10 @@ const App = () => {
     const personToDel = persons.find( person => person.id === id)
     if(confirm(`Delete ${personToDel.name}?`)){
       phoneService
-        //deleting number
+        //DELETE
         .deleteNumber(id)
         .then(response => {
-          console.log(`response after deleting note ${id}`, response)
+          console.log(`response after DELETE (note ${id})`, response)
           //updating state
           setPersons(persons.filter( person => person.id !== id))
         })

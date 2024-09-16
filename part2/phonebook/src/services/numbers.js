@@ -32,9 +32,16 @@ const deleteNumber = (id) => {
     return request.then(response => response.data)
 }
 
+//PUT (back-ticks defines the unique URL for each note based on its id)
+const update = (id, newObject) => {
+    const request = axios.put(`${baseUrl}/${id}`, newObject)
+    return request.then(response => response.data)
+  }
+
   
   export default { 
     getAll, 
     create,
-    deleteNumber
+    deleteNumber,
+    update
   }
