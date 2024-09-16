@@ -4,6 +4,7 @@ import Numbers from "./components/numbers"
 import Filter from './components/filter'
 import PersonForm from './components/personform'
 import phoneService from './services/numbers'
+import Notification from './components/Notifications'
 
 const App = () => {
   //persons state
@@ -13,6 +14,7 @@ const App = () => {
   const [newName, setNewName] = useState('') //new name
   const [newNumber, setNewNumber] = useState('') //new number
   const [search, setSearch] = useState('') //filter values
+  const [message, setMessage] = useState(null) //confirmation message
 
   //effect hooks
   useEffect( () => {
@@ -53,6 +55,11 @@ const App = () => {
           console.log("server POST response", response)
           //update the state of the App component to render the new note
           setPersons(persons.concat(response))
+          //show confirmation message for 5 sec
+          setMessage(response.name)
+          setTimeout(() => {
+            setMessage(null)
+          },5000)
         })
     }
     else{
@@ -62,7 +69,13 @@ const App = () => {
           .update(oldPersonObj.id, newPersonObj)
           .then(response => {
             console.log("server PUT response:", response)
+            //update state
             setPersons(persons.map( person => person.name !== oldPersonObj.name ? person : response))
+            //show confirmation message for 5 sec
+            setMessage(response.name)
+            setTimeout(() => {
+              setMessage(null)
+            },5000)
           })
       }
     }
@@ -113,6 +126,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message}/>
       < Filter search={search} handleSearch={handleSearch}/>
       
       <h2>Add a new</h2>
