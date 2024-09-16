@@ -15,6 +15,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('') //new number
   const [search, setSearch] = useState('') //filter values
   const [message, setMessage] = useState(null) //confirmation message
+  const [error, setError] = useState(null) //error message
 
   //effect hooks
   useEffect( () => {
@@ -82,9 +83,9 @@ const App = () => {
           .catch(error => {
             console.error(`Updating a removed element:`, error)
             //show error message for 5 sec
-            setMessage("error"+newPersonObj.name)
+            setError(newPersonObj.name)
             setTimeout(() => {
-              setMessage(null)
+              setError(null)
             },5000)
             //Removing an already deleted name from the app's state
             setPersons(persons.filter( person => person.name !== newPersonObj.name))
@@ -135,7 +136,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message}/>
+      <Notification message={message} error={error}/>
       < Filter search={search} handleSearch={handleSearch}/>
       
       <h2>Add a new</h2>

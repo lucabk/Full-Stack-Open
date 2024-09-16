@@ -1,13 +1,11 @@
-const Notification = ({message}) => {
-    if (message == null)
+const Notification = ({message, error}) => {
+    if (message == null && error == null)
         return null
 
-    else if (message.includes("error")){
-        const name = message.slice(5,message.length)
-        console.log(name)
+    else if (error){
         return(
             <div className="error">
-                Information of {name} has already been removed from the server
+                Information of {error} has already been removed from the server
             </div>
         )
     }
