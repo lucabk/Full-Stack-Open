@@ -39,7 +39,6 @@ const App = () => {
       const newPersonObj = {
         name : newName,
         number : newNumber,
-        id : String(persons.length+1)
       }
       //POST
     /*Since the data we sent in the POST request was a JavaScript object, 
@@ -85,6 +84,25 @@ const App = () => {
     setSearch(event.target.value)
   }
 
+  //event handler to delete numbers
+  const handleDelete = (id) => () => {
+    console.log("ID number to delete:", id)
+    const personToDel = persons.find( person => person.id === id)
+    if(confirm(`Delete ${personToDel.name}?`)){
+      phoneService
+        //deleting number
+        .deleteNumber(id)
+        .then(response => {
+          console.log(`response after deleting note ${id}`, response)
+          //updating state
+          setPersons(persons.filter( person => person.id !== id))
+        })
+        .catch(error => {
+          console.error(`Error deleting id ${id}`, error)
+        });
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -100,7 +118,9 @@ const App = () => {
 
       <h2>Numbers</h2>
       <ul>
-        {persons.map( person => <Numbers key={person.id} person={person} search={search}/>)}
+        {persons.map( person => 
+          <Numbers key={person.id} person={person} search={search}
+          handleDelete={handleDelete}/>)}
       </ul>     
     </div>
   )

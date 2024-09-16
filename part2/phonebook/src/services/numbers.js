@@ -18,20 +18,23 @@ const getAll = () => {
     })
   }
   
+
   //POST
-  const create = newObject => {
+const create = newObject => {
     const request = axios.post(baseUrl, newObject)
     return request.then(response => response.data)
   }
   
-  //PUT (back-ticks defines the unique URL for each note based on its id)
-  const update = (id, newObject) => {
-    const request = axios.put(`${baseUrl}/${id}`, newObject)
+
+//DELETE
+const deleteNumber = (id) => {
+    const request = axios.delete(`${baseUrl}/${id}`)
     return request.then(response => response.data)
-  }
+}
+
   
   export default { 
     getAll, 
-    create, 
-    update 
+    create,
+    deleteNumber
   }

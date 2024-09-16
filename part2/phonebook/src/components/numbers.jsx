@@ -1,10 +1,11 @@
 //display the names
-const Numbers = ({person, search}) => {
+const Numbers = ({person, search, handleDelete}) => {
     if (search === ""){
         return(
             <div>
                 <li>
                     {person.name} {person.number}
+                    <button onClick={handleDelete(person.id)}>delete</button>
                 </li>
             </div>
         )    
@@ -15,6 +16,7 @@ const Numbers = ({person, search}) => {
             <div>
                 <li>
                     {person.name} {person.number}
+                    <button onClick={handleDelete(person.id)}>delete</button>
                 </li>
             </div>
         )        
