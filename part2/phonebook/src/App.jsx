@@ -65,6 +65,7 @@ const App = () => {
     else{
       if(confirm(`${newPersonObj.name} is already added to phonebook, replace the old number with a new one?`)){
         const oldPersonObj = persons.find( person => person.name === newPersonObj.name)
+        //PUT
         phoneService
           .update(oldPersonObj.id, newPersonObj)
           .then(response => {
@@ -77,6 +78,17 @@ const App = () => {
               setMessage(null)
             },5000)
           })
+          //catch error while updating a deleted person's number
+          .catch(error => {
+            console.error(`Updating a removed element:`, error)
+            //show error message for 5 sec
+            setMessage("error"+newPersonObj.name)
+            setTimeout(() => {
+              setMessage(null)
+            },5000)
+            //Removing an already deleted name from the app's state
+            setPersons(persons.filter( person => person.name !== newPersonObj.name))
+          });
       }
     }
     //set empty values for the input elements    
@@ -117,9 +129,6 @@ const App = () => {
           //updating state
           setPersons(persons.filter( person => person.id !== id))
         })
-        .catch(error => {
-          console.error(`Error deleting id ${id}`, error)
-        });
     }
   }
 
