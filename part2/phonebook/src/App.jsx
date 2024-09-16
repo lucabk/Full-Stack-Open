@@ -1,9 +1,9 @@
 //effect hooks are used when fetching data from a server.
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Numbers from "./components/numbers"
 import Filter from './components/filter'
 import PersonForm from './components/personform'
+import phoneService from './services/numbers'
 
 const App = () => {
   //persons state
@@ -16,34 +16,46 @@ const App = () => {
 
   //effect hooks
   useEffect( () => {
-    axios
-      //promise
-      .get("http://localhost:3001/persons")
+    phoneService
+      //GET
+      .getAll()
       //event handler to access the result of the operation
       .then( response => {
-        console.log("response data:", response.data)
+        console.log("server GET response:", response)
         /*stores the notes received from the server into the state a call
         to a state-updating function triggers the re-rendering of the component*/
-        setPersons(response.data)
+        setPersons(response)
       })
   }, [])
 
-  console.log("persons=",persons)
 
   //event hander for submit
   const addNumber = (event) => {
     //prevent reloading after clicking the button
     event.preventDefault()
     //check if the name is already in the list
-    if (checkName(newName)){
-          //create new obj to update the state (not directly!)
+    if (!checkName(newName)){
+      //create new obj to update the state (not directly!)
       const newPersonObj = {
         name : newName,
         number : newNumber,
         id : String(persons.length+1)
       }
-      //create new state with a new obj
-      setPersons(persons.concat(newPersonObj))
+      //POST
+    /*Since the data we sent in the POST request was a JavaScript object, 
+    axios automatically knew to set the appropriate application/json 
+    value for the Content-Type header.*/
+      phoneService
+        //The object is sent to the server using the axios post method.
+        .create(newPersonObj)
+         /*The registered event handler logs the response that is sent 
+        back from the server to the console*/
+        .then(response => {
+          console.log("server POST response", response)
+          //update the state of the App component to render the new note
+          setPersons(persons.concat(response))
+          console.log("persons length",persons.length)
+        })
     }
     else{
       alert(`${newName} is already added to phonebook`)
@@ -63,14 +75,8 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-  //return false if there is not a duplicate
-  const checkName = (name) => {
-    for (let i=0; i<persons.length; i++){
-      if (name === persons[i].name)
-        return false
-    }
-    return true
-  }
+  //return undefined if there is not a duplicate
+  const checkName = name => persons.find( person => person.name === name)
 
 
   //event handler for searching names
@@ -95,8 +101,7 @@ const App = () => {
       <h2>Numbers</h2>
       <ul>
         {persons.map( person => <Numbers key={person.id} person={person} search={search}/>)}
-      </ul>
-      
+      </ul>     
     </div>
   )
 }
