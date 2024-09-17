@@ -1,22 +1,18 @@
-const Display = ({matching, search, handleOnClick}) => {
+import { useEffect } from "react"
+
+const Display = ({matching, search, handleOnClick,handleWeather,weather}) => {
    console.log("Display matching:",matching," search:",search)
 
    /*When there is only one country matching the query, then the basic 
    data of the country  are shown*/
    if (matching.length === 1){
       const country = matching[0]
-      return(
-         <div>
-            <h2>{country.name.common}</h2>
-            capital {country.capital}<br/>
-            area {country.area}<br/><br/>
-            <strong>languages:</strong>
-            <ul>
-               {Object.entries(country.languages).map(([key, value]) => 
-               (<li key={key}>{value}</li>))}
-            </ul>
-            <img className="flag" alt={country.flags.alt} src={country.flags.png}></img>
-         </div>
+      return (
+         <DisplayOneCountry 
+            country={country} 
+            handleWeather={handleWeather}
+            weather={weather}
+         />
       )
    }
 
@@ -26,7 +22,7 @@ const Display = ({matching, search, handleOnClick}) => {
       return(
          <div>
             {matching.map( country =>
-               <DisplayCountry 
+               <DisplayCountries 
                   key={country.cca3} 
                   country={country}
                   handleOnClick={handleOnClick}
@@ -47,12 +43,40 @@ const Display = ({matching, search, handleOnClick}) => {
    return <div>no country found</div>
 }
 
-const DisplayCountry = ({country, handleOnClick}) => {
+//display less than 10 countries
+const DisplayCountries = ({country, handleOnClick}) => {
    const countryName = country.name.common
    console.log("DisplayCountrycountryName =",countryName)
    return(
       <div>
          {countryName} <button onClick={handleOnClick(country)}>show</button>
+      </div>
+   )
+}
+
+
+//display a single country
+const DisplayOneCountry = ({country, handleWeather,weather}) => {
+   useEffect(() => {
+      handleWeather(country.capital)
+   }, [country.capital]) 
+   const icon = `https://openweathermap.org/img/wn/${weather.icon}@2x.png`
+
+   return(
+      <div>
+         <h2>{country.name.common}</h2>
+         capital {country.capital}<br/>
+         area {country.area}<br/><br/>
+         <strong>languages:</strong>
+         <ul>
+            {Object.entries(country.languages).map(([key, value]) => 
+            (<li key={key}>{value}</li>))}
+         </ul>
+         <img className="flag" alt={country.flags.alt} src={country.flags.png}></img>
+         <h3>Weather in {country.capital}</h3>
+         temperature {weather.temp} Celsius <br/>
+         <img src={icon} alt="weather icon"></img><br/>
+         wind {weather.wind} m/s
       </div>
    )
 }
