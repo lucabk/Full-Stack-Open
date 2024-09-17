@@ -1,4 +1,4 @@
-const Display = ({matching, search}) => {
+const Display = ({matching, search, handleOnClick}) => {
    console.log("Display matching:",matching," search:",search)
 
    /*When there is only one country matching the query, then the basic 
@@ -26,7 +26,11 @@ const Display = ({matching, search}) => {
       return(
          <div>
             {matching.map( country =>
-               <DisplayCountry key={country.cca3} countryName={country.name.common}/>
+               <DisplayCountry 
+                  key={country.cca3} 
+                  country={country}
+                  handleOnClick={handleOnClick}
+                  />
             )}
          </div>
       )
@@ -39,14 +43,16 @@ const Display = ({matching, search}) => {
    then the user is prompted to make their query more specific*/
    else if (matching.length > 10) return("Too many matches, specific another")
    
+  //typo
    return <div>no country found</div>
 }
 
-const DisplayCountry = ({countryName}) => {
+const DisplayCountry = ({country, handleOnClick}) => {
+   const countryName = country.name.common
    console.log("DisplayCountrycountryName =",countryName)
    return(
       <div>
-         {countryName}
+         {countryName} <button onClick={handleOnClick(country)}>show</button>
       </div>
    )
 }

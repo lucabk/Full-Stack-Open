@@ -40,6 +40,10 @@ const  App = () =>  {
     setSearch(event.target.value) //update the state of input element
   }
 
+  //handle onClick button
+  const handleOnClick = (obj) => () => {
+    setMatching([obj])
+  }
 
   return (
     <>
@@ -47,7 +51,10 @@ const  App = () =>  {
         value={search} 
         onChange={handleOnChange} 
       />
-      <Display matching={matching} search={search}
+      <Display 
+        matching={matching} 
+        search={search}
+        handleOnClick={handleOnClick}
         />
     </>
   )
