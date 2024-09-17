@@ -17,3 +17,5 @@ The repository is organized into the following parts, each corresponding to diff
 
 - **part2**:
   - **courseinfo**: A continuation of the course information project from Part 1, expanding on the previous version by introducing more complex state management and REST API integration.
+  - **phonebook**: A project to build a simple phonebook application using React and Node.js. This part focuses on working with forms, REST APIs, and database integration using jsondb.
+  - **countries**: A project for displaying information about different countries, integrating external APIs to fetch data, and practicing React useEffect and handling side effects.
