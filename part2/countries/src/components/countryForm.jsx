@@ -1,13 +1,12 @@
-const CountryForm = ({value, onChange, onSubmit}) => {
+const CountryForm = ({value, onChange}) => {
     return(
         <div>
-            <form onSubmit={onSubmit}>
+            <form>
                 find countries
                 <input 
                     value={value}
                     onChange={onChange}
                 />
-                <button type="submit">search</button>
             </form>
         </div>
     )

@@ -1,9 +1,4 @@
-.error {
-    color: red;
-    background: lightgrey;
-    font-size: 18px;
-    border-style: solid;
-    border-radius: 5px;
-    padding: 10px;
-    margin-top: 10px;
-  }
+.flag {
+  width: 100px;
+  height: auto;
+}
