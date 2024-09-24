@@ -26,4 +26,6 @@ The solutions for Part 3 can be found in a separate repository: https://github.c
   - **phonebook**: Implementation of a backend related to the previously developed front-end using Mongoose and MongoDB Cloud (Atlas) for the database, Express as server and Render for deployment on the Internet
 
 - **part4**:
-  - **blog list**: 
+  - **blog list**: In this part, we focus on building a backend for a blog list application using Express and MongoDB. Key topics include creating RESTful APIs, implementing user authentication with JWT, using Mongoose for database handling, and writing unit and integration tests for the backend with Supertest. Additionally, middleware functions are introduced for handling token extraction, user authentication, and error handling.
+
+
