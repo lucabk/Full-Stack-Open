@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3001/persons'
+const baseUrl = '/api/persons'
 
 /*The module returns an object that has three functions (getAll, create, 
 and update).The functions directly return the response.data 

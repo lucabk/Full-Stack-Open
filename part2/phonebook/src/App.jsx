@@ -62,6 +62,15 @@ const App = () => {
             setMessage(null)
           },5000)
         })
+        //mongoose POST validation error
+        .catch( error => {
+          console.log(error.response.data.error)
+          //error notification
+          setError(error.response.data.error)
+          setTimeout(() => {
+            setError(null)
+          },5000)
+        })
     }
     else{
       if(confirm(`${newPersonObj.name} is already added to phonebook, replace the old number with a new one?`)){
@@ -81,14 +90,22 @@ const App = () => {
           })
           //catch error while updating a deleted person's number
           .catch(error => {
-            console.error(`Updating a removed element:`, error)
-            //show error message for 5 sec
-            setError(newPersonObj.name)
+            console.error(`Updating error:`, error.response.data.error)
+            let errorMessage
+            //Removing an already deleted name error
+            if (error.response.data.error === "Person not found"){
+              //show error message for 5 sec
+              errorMessage= "Information of "+newPersonObj.name+" has already been removed from the server"
+              //Removing an already deleted name from the app's state
+              setPersons(persons.filter( person => person.name !== newPersonObj.name))
+            }
+            //mongoose validation error      
+            else if (error.response.data.error.includes("Validation failed"))
+              errorMessage = error.response.data.error
+            setError(errorMessage)
             setTimeout(() => {
               setError(null)
             },5000)
-            //Removing an already deleted name from the app's state
-            setPersons(persons.filter( person => person.name !== newPersonObj.name))
           });
       }
     }
