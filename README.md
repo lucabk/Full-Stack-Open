@@ -8,7 +8,8 @@ Course website: [Full Stack Open](https://fullstackopen.com/en/)
 
 The repository is organized into the following parts, each corresponding to different sections of the course:
 
-- **part0**: Exercises and notes from Part 0 of the course, which introduces the basics of web development, including the fundamentals of the web, HTTP protocol, and the basics of modern web applications.
+- **part0**: 
+   - Exercises and notes from Part 0 of the course, which introduces the basics of web development, including the fundamentals of the web, HTTP protocol, and the basics of modern web applications.
   
 - **part1**:
    - **courseinfo**: A project to create a simple course information page using React, covering the basics of components, props, and state management.
@@ -19,3 +20,10 @@ The repository is organized into the following parts, each corresponding to diff
   - **courseinfo**: A continuation of the course information project from Part 1, expanding on the previous version by introducing more complex state management and REST API integration.
   - **phonebook**: A project to build a simple phonebook application using React and Node.js. This part focuses on working with forms, REST APIs, and database integration using jsondb.
   - **countries**: A project for displaying information about different countries, integrating external APIs to fetch data, and practicing React useEffect and handling side effects.
+
+- **part3**:
+The solutions for Part 3 can be found in a separate repository: https://github.com/lucabk/Full-Stack-Open-Part3
+  - **phonebook**: Implementation of a backend related to the previously developed front-end using Mongoose and MongoDB Cloud (Atlas) for the database, Express as server and Render for deployment on the Internet
+
+- **part4**:
+  - **blog list**: 
