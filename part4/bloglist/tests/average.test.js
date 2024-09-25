@@ -1,7 +1,7 @@
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
 //imports the function to be tested and assigns it to a variable called listHelper
-const { totalLikes, dummy, favoriteBlog } = require('../utils/list_helper')
+const { totalLikes, dummy, favoriteBlog, mostBlogs } = require('../utils/list_helper')
 
 const listWithOneBlog  = [
   {
@@ -110,13 +110,36 @@ describe('Most Likes', () => {
   }
 
 
-  test('of empty list is zero', () => {
+  test('of empty list is empty object', () => {
     assert.strict(favoriteBlog([]),{})
   })
   test('of one blog, equals the likes of that', () => {
-    assert.strict(favoriteBlog(listWithOneBlog),oneBlog)
+    assert.strict(favoriteBlog(listWithOneBlog), oneBlog)
   })
   test('of a bigger list is calculated right', () => {
     assert.strict(favoriteBlog(blogs), blogWithMostLikes)
   })
+})
+
+
+describe('Most blogs number', () => {
+  const oneBlog = {
+    author: listWithOneBlog[0].author,
+    blogs: 1
+  }
+  const mostAuthor = {
+    author: 'Robert C. Martin',
+    blogs: 3
+  }
+
+  test('of empty list is empty object', () => {
+    assert.strict(favoriteBlog([]),{})
+  })
+  test('of one blog', () => {
+    assert.strict(mostBlogs(listWithOneBlog), oneBlog)
+  })
+  test('of a bigger list is calculated right', () => {
+    assert.strict(mostBlogs(blogs), mostAuthor)
+  })
+
 })
