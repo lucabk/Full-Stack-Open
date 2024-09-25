@@ -36,9 +36,28 @@ const mostBlogs = (blogs) => {
     act.blogs>prev.blogs? act: prev)
 }
 
+const mostLikes = (blogs) => {
+  if (blogs.length===0) return {}
+  const authorBlogs = []
+  for (let i=0; i<blogs.length; i++){
+    let element = authorBlogs.find(a => a.author===blogs[i].author)
+    if(element){
+      let newValue = { ...element, likes:element.likes+blogs[i].likes }
+      let index = authorBlogs.indexOf(element)
+      authorBlogs.splice(index,1)
+      authorBlogs.push(newValue)
+    }
+    else
+      authorBlogs.push({ author:blogs[i].author, likes:blogs[i].likes })
+  }
+  return authorBlogs.reduce( (prev, act) =>
+    act.blogs>prev.blogs? act: prev)
+}
+
 module.exports = {
   totalLikes,
   dummy,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
