@@ -1,32 +1,25 @@
 //import library
 const mongoose = require('mongoose')
-//set url  connection to cloud db
-const config = require('../utils/config')
-const url = config.MONGODB_URI
-//logger
-const logger = require('../utils/logger')
-//allows you to query fields that are not defined in the schema
-mongoose.set('strictQuery',false)
-
-
-//connection to db
-logger.info('connecting to', url,'...')
-mongoose.connect(url)
-  .then(() => {
-    logger.info('connected to MongoDB')
-  })
-  .catch(error => {
-    logger.info('error connecting to MongoDB:', error.message)
-  })
 
 //schema definition and (custom) validation
 const blogSchema = new mongoose.Schema({
-  title: String,
+  title: {
+    type:String,
+    required:true,
+    minlength:3,
+    unique: true
+  },
   author: String,
-  url: String,
-  likes: Number
+  url: {
+    type:String,
+    required:true
+  },
+  likes: {
+    type:Number,
+    default:0
+  }
 })
-
+//transform the document before it is returned as JSON
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()

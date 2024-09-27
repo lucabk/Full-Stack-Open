@@ -13,11 +13,14 @@ const errorHandler = (error, req, res, next) => {
   the response object passed as a parameter.
   In all other error situations, the middleware passes the error forward to the default Express error handler*/
   if (error.name === 'CastError') {
+    logger.error('CastError detected')
     return res.status(400).json({ error: 'malformatted id' })
   }
   //mongoose validation error
-  else if (error.name === 'ValidationError')
+  else if (error.name === 'ValidationError'){
+    logger.error('CastError detected')
     return res.status(400).json({ error: error.message })
+  }
   next(error)// Pass errors to Express
 }
 
