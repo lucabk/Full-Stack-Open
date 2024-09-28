@@ -1,5 +1,6 @@
 const router = require('express').Router()//A router object is an instance of middleware and routes
-const Blog = require('../models/mongose')
+const Blog = require('../models/blog')
+const User = require('../models/user')
 const logger = require('../utils/logger')
 
 //GET all
@@ -22,8 +23,13 @@ router.get('/:id', async (req, res) => {
 //POST
 router.post('/', async (req, res) => {
   const blog = new Blog(req.body) //new entry
+  const savedBlog = await blog.save()//save the new entry
+  const user = await User.findById(req.body.user)//find the user who created the new entry
+  if(!user)//user not found
+    return res.status(400).json({ error:'must specify user when adding a blog' })
+  user.blogs = user.blogs.concat(savedBlog._id)//add the new entry to the user's list of blogs
+  await user.save()//save the user
 
-  const savedBlog = await blog.save()
   res.status(201).json(savedBlog)
 })
 

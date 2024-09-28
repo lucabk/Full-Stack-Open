@@ -7,7 +7,7 @@ const blogSchema = new mongoose.Schema({
     type:String,
     required:true,
     minlength:3,
-    unique: true
+    unique:true
   },
   author: String,
   url: {
@@ -17,6 +17,10 @@ const blogSchema = new mongoose.Schema({
   likes: {
     type:Number,
     default:0
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'//The new entry blog contains information about the user who created it
   }
 })
 //transform the document before it is returned as JSON
@@ -25,6 +29,7 @@ blogSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
+    returnedObject.user = returnedObject.user.toString()//convert the user object to a string
   }
 })
 

@@ -1,4 +1,5 @@
-const Blog = require('../models/mongose')
+const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const initialBlog = [
   {
@@ -34,7 +35,12 @@ const blogsInDb = async () => {
   const blogs = await Blog.find({})
   return blogs.map(b => b.toJSON())
 }
+// function that can be used for checking the users stored in the database
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(u => u.toJSON())
+}
 
 module.exports = {
-  initialBlog, nonExistingId, blogsInDb
+  initialBlog, nonExistingId, blogsInDb, usersInDb
 }

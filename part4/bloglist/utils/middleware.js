@@ -21,6 +21,12 @@ const errorHandler = (error, req, res, next) => {
     logger.error('CastError detected')
     return res.status(400).json({ error: error.message })
   }
+  /*Mongoose validations do not detect the index violation (unique feature), and instead of ValidationError
+  they return an error of type MongoServerError*/
+  else if (error.name === 'MongoServerError' && error.message.includes('E11000 duplicate key error')){
+    logger.error('MongoServerError detected')
+    return res.status(400).json({ error: 'expected `username` to be unique' })
+  }
   next(error)// Pass errors to Express
 }
 
