@@ -30,6 +30,19 @@ const nonExistingId = async () => {
   return blog._id.toString()
 }
 
+const nonExistingUser = async () => {
+  const user = new User({
+    username:'Pony Soprano',
+    name:'Pony',
+    passwordHash:'Pony Soprano'
+  })
+
+  await user.save()
+  await user.deleteOne()
+  return user._id.toString()
+}
+
+
 // function that can be used for checking the blogs stored in the database
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
@@ -42,5 +55,5 @@ const usersInDb = async () => {
 }
 
 module.exports = {
-  initialBlog, nonExistingId, blogsInDb, usersInDb
+  initialBlog, nonExistingId, blogsInDb, usersInDb, nonExistingUser
 }

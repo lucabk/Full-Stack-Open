@@ -75,11 +75,13 @@ describe('Blog Tests:', () => {
     test('a specific blog can be viewed', async () => {
       const initialBlog = await helper.blogsInDb()//db query
       const blogToView = initialBlog[0]
+      blogToView.user = blogToView.user.toString()//convert the Mongoose object to a string (from new ObjectId('66f92e19379c69da8256f131'))
 
       const response = await api
         .get(`/api/blogs/${blogToView.id}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
+
       assert.deepStrictEqual(response.body, blogToView)
     })
 
@@ -156,6 +158,44 @@ describe('Blog Tests:', () => {
       const response = await helper.blogsInDb()
       const blogJustAdded = response.find(b => b.title === blogNoLikes.title)//assumption: title must be unique
       assert.strictEqual(blogJustAdded.likes, 0)
+    })
+
+    test('fails if the user adding the blog is not specified', async () => {
+      const blogBefore = await helper.blogsInDb()
+      const newInvalidBlog = {
+        title:'invalidTitle',
+        author:'Unknown',
+        url:'ww.invalidurl.com',
+        likes: 0
+      }
+      const response = await api
+        .post('/api/blogs')
+        .send(newInvalidBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+      const blogAfter = await helper.blogsInDb()
+      assert.deepStrictEqual(blogAfter, blogBefore)
+      assert(response.body.error.includes('must specify user subject to add a blog'))
+    })
+
+    test('fails if the user is not in the users collection', async () => {
+      const blogBefore = await helper.blogsInDb()
+      const expiredUserId = helper.nonExistingUser()
+
+      const newInvalidBlog = {
+        title:'invalidTitle',
+        author:'Unknown',
+        url:'ww.invalidurl.com',
+        likes: 0,
+        user: expiredUserId
+      }
+      await api
+        .post('/api/blogs')
+        .send(newInvalidBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+      const blogAfter = await helper.blogsInDb()
+      assert.deepStrictEqual(blogAfter, blogBefore)
     })
   })
 

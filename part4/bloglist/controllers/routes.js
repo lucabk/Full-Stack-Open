@@ -5,7 +5,9 @@ const logger = require('../utils/logger')
 
 //GET all
 router.get('/', async (req, res) => {
-  const blogs = await Blog.find({})
+  const blogs = await Blog
+    .find({})//find all the entries
+    .populate('user', { username:1, name:1 })//populate the user field of the blog
   res.json(blogs)
 })
 //GET by id
@@ -22,11 +24,16 @@ router.get('/:id', async (req, res) => {
 
 //POST
 router.post('/', async (req, res) => {
+  const userProperty = req.body.user
+  if(!userProperty)//if req.body.user === null -> 400
+    return res.status(400).json({ error:'must specify user subject to add a blog' })
+  const user = await User.findById(userProperty)//find the user who created the new entry
+  if(!user)//user not found in users collection
+    return res.status(400).json({ error:'must specify an existent user when adding a blog' })
+
   const blog = new Blog(req.body) //new entry
   const savedBlog = await blog.save()//save the new entry
-  const user = await User.findById(req.body.user)//find the user who created the new entry
-  if(!user)//user not found
-    return res.status(400).json({ error:'must specify user when adding a blog' })
+
   user.blogs = user.blogs.concat(savedBlog._id)//add the new entry to the user's list of blogs
   await user.save()//save the user
 

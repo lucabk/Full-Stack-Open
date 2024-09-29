@@ -4,7 +4,13 @@ const User = require('../models/user')
 
 //GET: get all users
 usersRouter.get('/', async (req, res) => {
-  const users = await User.find({})
+  const users = await User
+    .find({})
+    /*The Mongoose join is done with the populate method. The argument given to the populate method defines
+    that the ids referencing blog objects in the blogs field of the user document will be replaced by
+    the referenced blog documents*/
+    .populate('blogs',                    //populate the user's blogs
+      { url:1, title:1, author:1, })//choosing the fields we want to include from the documents
   res.json(users)
 })
 
