@@ -8,6 +8,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const bcrypt = require('bcrypt')
 
+
 /*The test imports the Express application from the app.js module and wraps it with the supertest function into a
 so-called superagent object. This object is assigned to the api variable and tests can use it for making HTTP
 requests to the backend.*/
@@ -27,9 +28,10 @@ describe('Blog Tests:', () => {
 
   //Let's initialize the database before every test with the beforeEach function:
   beforeEach(async () => {
-    await Blog.deleteMany({}) //clear db
-    await User.deleteMany({})//clear db
+    await Blog.deleteMany({}) //clear blog db
+    await User.deleteMany({})//clear user db
 
+    //create a new user "testuser" with password "testpsw"
     const passwordHash = await bcrypt.hash('testpsw', 10)//hash the password
     const user = new User({ username: 'testuser', passwordHash })//create a new user
     const savedUser = await user.save()//save the user
@@ -106,20 +108,26 @@ describe('Blog Tests:', () => {
   //POST TESTS
   describe('addition of a new blog', () => {
 
-    test('succeeds with valid data', async () => {
+    test('succeeds with valid data and token', async () => {
+
+      //create valid token
+      const token = await helper.generateToken('testuser', 'testpsw')
+
+      //create valid data
       const newBlog = {
         title: 'Videogames',
         author: 'Ross Ulbricht',
         url: 'www.silkgames.onion',
         likes: 397204,
-        user: testId
       }
       //post to routes.js
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
+
       //query db
       const response = await helper.blogsInDb()
       assert.strictEqual(response.length, helper.initialBlog.length+1)//verify new length of collection
@@ -128,13 +136,17 @@ describe('Blog Tests:', () => {
     })
 
     //test that verifies that a blog without title and url will not be saved into the database
-    test('fails with status code 400 if data invalid', async () => {
+    test('fails with status code 400 if data invalid and token is valid', async () => {
+      //create valid token
+      const token = await helper.generateToken('testuser', 'testpsw')
+      //create invalid data
       const newBlog = {
         author: 'Satoshi Nakamoto',
         likes: 39
       }
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(400)//errorHandler 400 'validationErrror'
 
@@ -142,16 +154,19 @@ describe('Blog Tests:', () => {
       assert.strictEqual(response.length, helper.initialBlog.length)
     })
 
-    //test that verifies that if the likes property is missing from the request, it will default to the value 0
+    //verifies that if the likes property is missing from the request, it will default to the value 0
     test('without "likes" will set to zero like', async () => {
+      //create valid token
+      const token = await helper.generateToken('testuser', 'testpsw')
+      //create invalid data
       const blogNoLikes = {
         title: 'RBMK',
         author: 'Valery Legasov',
         url: 'www.Pryp"jat.ua',
-        user: testId
       }
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(blogNoLikes)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -160,43 +175,55 @@ describe('Blog Tests:', () => {
       assert.strictEqual(blogJustAdded.likes, 0)
     })
 
-    test('fails if the user adding the blog is not specified', async () => {
+    //fails with invalid token
+    test('fails to save a blog (401) if an invalid token is provided', async () => {
       const blogBefore = await helper.blogsInDb()
-      const newInvalidBlog = {
+      const newValidBlog = {
         title:'invalidTitle',
         author:'Unknown',
         url:'ww.invalidurl.com',
         likes: 0
       }
+      const invalidToken = 'Bearer invalidtoken1234567890'
+
       const response = await api
         .post('/api/blogs')
-        .send(newInvalidBlog)
-        .expect(400)
+        .set('Authorization', invalidToken)
+        .send(newValidBlog)
+        .expect(401)
         .expect('Content-Type', /application\/json/)
+
       const blogAfter = await helper.blogsInDb()
       assert.deepStrictEqual(blogAfter, blogBefore)
-      assert(response.body.error.includes('must specify user subject to add a blog'))
+      assert(response.body.error.includes('token invalid'))
     })
 
     test('fails if the user is not in the users collection', async () => {
       const blogBefore = await helper.blogsInDb()
-      const expiredUserId = helper.nonExistingUser()
+      //user expired
+      const { username, password } = helper.nonExistingUser()
 
-      const newInvalidBlog = {
-        title:'invalidTitle',
-        author:'Unknown',
-        url:'ww.invalidurl.com',
-        likes: 0,
-        user: expiredUserId
-      }
-      await api
-        .post('/api/blogs')
-        .send(newInvalidBlog)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
+      const response = await api
+        .post('/api/login')
+        .send({ username, password })
+        .expect(401)
+      assert(response.body.error.includes('invalid username or password'))
       const blogAfter = await helper.blogsInDb()
       assert.deepStrictEqual(blogAfter, blogBefore)
     })
+
+
+    test('fails to generate valid token with incorrect password', async () => {
+      const blogBefore = await helper.blogsInDb()
+      const response = await api
+        .post('/api/login')
+        .send({ username:'testuser', password:'wrongpsw' })
+        .expect(401)
+      assert(response.body.error.includes('invalid username or password'))
+      const blogAfter = await helper.blogsInDb()
+      assert.deepStrictEqual(blogAfter, blogBefore)
+    })
+
   })
 
 

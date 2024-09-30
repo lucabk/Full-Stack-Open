@@ -27,6 +27,18 @@ const errorHandler = (error, req, res, next) => {
     logger.error('MongoServerError detected')
     return res.status(400).json({ error: 'expected `username` to be unique' })
   }
+  //JsonWebTokenError
+  else if (error.name ===  'JsonWebTokenError') {
+    logger.error('JsonWebTokenError detected')
+    return res.status(401).json({ error: 'token invalid' })
+  }
+  //TokenExpiredError
+  else if (error.name === 'TokenExpiredError') {
+    return res.status(401).json({
+      error: 'token expired'
+    })
+  }
+
   next(error)// Pass errors to Express
 }
 

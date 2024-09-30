@@ -2,6 +2,7 @@ const router = require('express').Router()//A router object is an instance of mi
 const Blog = require('../models/blog')
 const User = require('../models/user')
 const logger = require('../utils/logger')
+const jwt = require('jsonwebtoken')
 
 //GET all
 router.get('/', async (req, res) => {
@@ -22,16 +23,41 @@ router.get('/:id', async (req, res) => {
     res.status(404).end()//blog not found
 })
 
+
+//a function that extracts a JSON Web Token (JWT) from the Authorization header of an HTTP request
+const getTokenFrom = request => {
+  //The function retrieves the value of the Authorization header from the request object using the get method
+  const authorization = request.get('authorization')
+  //The function checks if the authorization header exists and if it starts with the string 'Bearer '
+  if (authorization && authorization.startsWith('Bearer ')) {
+    //the function removes the 'Bearer ' prefix from the header value to extract the actual token
+    return authorization.replace('Bearer ', '')
+  }
+  //If the authorization header is not present or does not start with 'Bearer ', the function returns null
+  return null
+}
 //POST
 router.post('/', async (req, res) => {
-  const userProperty = req.body.user
-  if(!userProperty)//if req.body.user === null -> 400
-    return res.status(400).json({ error:'must specify user subject to add a blog' })
-  const user = await User.findById(userProperty)//find the user who created the new entry
+  const { title, author, url, likes } = req.body
+
+  /*The function getTokenFrom extracts the token from the request object. The function jwt.verify decodes the token
+  The object decoded from the token contains the username and id fields, which tell the server who made the request.*/
+  const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET)
+  //If the token is missing or it is invalid, the exception JsonWebTokenError is raised
+
+  /*If the object decoded from the token does not contain the user's identity (decodedToken.id is undefined),
+  error status code 401 unauthorized is returned*/
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'token invalid' })
+  }
+
+  //The function retrieves the user ID from the decoded token and searches for the user in the database
+  const user = await User.findById(decodedToken.id)
+
   if(!user)//user not found in users collection
     return res.status(400).json({ error:'must specify an existent user when adding a blog' })
 
-  const blog = new Blog(req.body) //new entry
+  const blog = new Blog({ title, author, url, likes, user:user._id }) //new entry (user._id===decodedToken.id)
   const savedBlog = await blog.save()//save the new entry
 
   user.blogs = user.blogs.concat(savedBlog._id)//add the new entry to the user's list of blogs
