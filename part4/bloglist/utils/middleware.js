@@ -1,4 +1,6 @@
 const logger = require('./logger')
+const jwt = require('jsonwebtoken')
+const User = require('../models/user')
 
 //This middleware will be used for catching requests made to non-existent routes
 const unknownEndpoint = (request, response) => {
@@ -59,4 +61,25 @@ const tokenExtractor = (req, res, next) => {
   next()
 }
 
-module.exports = { unknownEndpoint, errorHandler, tokenExtractor }
+
+//middleware that finds out the user and sets it to the request object
+const userExtractor = async (req, res, next) => {
+  /*The function jwt.verify decodes the token
+  The object decoded from the token contains the username and id fields, which tell the server who made the request.*/
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+  //If the token is missing or it is invalid, the exception JsonWebTokenError is raised
+
+  /*If the object decoded from the token does not contain the user's identity (decodedToken.id is undefined),
+  error status code 401 unauthorized is returned*/
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'token invalid' })
+  }
+
+  //The function retrieves the user ID from the decoded token and searches for the user in the database
+  const user = await User.findById(decodedToken.id)
+
+  req.user = user
+  next()
+}
+
+module.exports = { unknownEndpoint, errorHandler, tokenExtractor, userExtractor }
