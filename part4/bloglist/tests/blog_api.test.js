@@ -274,7 +274,7 @@ describe('Blog Tests:', () => {
       assert.strictEqual(finalBlog.length, initialBlog.length-1)
     })
 
-    test('fails with status code 404 if the blog is not in the db', async () => {
+    test('fails with status code 204 if the blog is not in the db', async () => {
       const initialBlog = await helper.blogsInDb()
       const blogIdDeleted = await helper.nonExistingId()
 
@@ -283,7 +283,7 @@ describe('Blog Tests:', () => {
       await api
         .del(`/api/blogs/${blogIdDeleted}`)
         .set('Authorization', `Bearer ${token}`)
-        .expect(404)
+        .expect(204)
 
       const finalBlog = await helper.blogsInDb()
       assert.strictEqual(finalBlog.length, initialBlog.length)
@@ -304,7 +304,7 @@ describe('Blog Tests:', () => {
       assert.strictEqual(finalBlog.length, initialBlog.length)
     })
 
-    test('fails with status code 401 if token is valid, blog exists, but the user is not the creator', async () => {
+    test('fails with status code 403 if token is valid, blog exists, but the user is not the creator', async () => {
       const initialBlog = await helper.blogsInDb()
       const blogToDelete = initialBlog[0]
 
@@ -313,7 +313,7 @@ describe('Blog Tests:', () => {
       const response = await api
         .del(`/api/blogs/${blogToDelete.id}`)
         .set('Authorization', `Bearer ${token}`)
-        .expect(401)
+        .expect(403)
 
       const finalBlog = await helper.blogsInDb()
       assert.strictEqual(finalBlog.length, initialBlog.length)

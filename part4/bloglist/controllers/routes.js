@@ -46,7 +46,7 @@ router.delete('/:id', middleware.userExtractor, async (req, res) => {
   //check if the blog exists
   const blog = await Blog.findById(id)
   if(!blog)
-    res.status(404).end()//blog not found
+    res.status(204).end()//blog not found
   const blogCreator = blog.user.toString()
 
   if(!req.user)//user not found in users collection
@@ -54,10 +54,13 @@ router.delete('/:id', middleware.userExtractor, async (req, res) => {
 
   if (blogCreator === req.user._id.toString()){
     await Blog.findByIdAndDelete(id)
+    req.user.blogs = req.user.blogs.filter(b => b._id.toString() !== blog._id.toString())
+
+    await req.user.save()
     res.status(204).end()
   }
   else
-    return res.status(401).json({ error: 'a blog can be deleted only by the user who added it' })
+    return res.status(403).json({ error: 'a blog can be deleted only by the user who added it' })
 
 })
 
