@@ -42,4 +42,21 @@ const errorHandler = (error, req, res, next) => {
   next(error)// Pass errors to Express
 }
 
-module.exports = { unknownEndpoint, errorHandler }
+
+//a middleware that extracts a JSON Web Token (JWT) from the Authorization header of an HTTP request
+const tokenExtractor = (req, res, next) => {
+  //The function retrieves the value of the Authorization header from the request object using the get method
+  const authorization = req.get('authorization')
+  //The function checks if the authorization header exists and if it starts with the string 'Bearer '
+  if (authorization && authorization.startsWith('Bearer ')) {
+    //the function removes the 'Bearer ' prefix from the header value to extract the actual token
+    req.token = authorization.replace('Bearer ', '')
+  }
+  //If the authorization header is not present or does not start with 'Bearer ', the function set  null
+  else
+    req.token = null
+
+  next()
+}
+
+module.exports = { unknownEndpoint, errorHandler, tokenExtractor }

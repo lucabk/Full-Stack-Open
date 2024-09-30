@@ -24,25 +24,13 @@ router.get('/:id', async (req, res) => {
 })
 
 
-//a function that extracts a JSON Web Token (JWT) from the Authorization header of an HTTP request
-const getTokenFrom = request => {
-  //The function retrieves the value of the Authorization header from the request object using the get method
-  const authorization = request.get('authorization')
-  //The function checks if the authorization header exists and if it starts with the string 'Bearer '
-  if (authorization && authorization.startsWith('Bearer ')) {
-    //the function removes the 'Bearer ' prefix from the header value to extract the actual token
-    return authorization.replace('Bearer ', '')
-  }
-  //If the authorization header is not present or does not start with 'Bearer ', the function returns null
-  return null
-}
 //POST
 router.post('/', async (req, res) => {
   const { title, author, url, likes } = req.body
 
   /*The function getTokenFrom extracts the token from the request object. The function jwt.verify decodes the token
   The object decoded from the token contains the username and id fields, which tell the server who made the request.*/
-  const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET)
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
   //If the token is missing or it is invalid, the exception JsonWebTokenError is raised
 
   /*If the object decoded from the token does not contain the user's identity (decodedToken.id is undefined),
