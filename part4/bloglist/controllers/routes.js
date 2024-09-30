@@ -57,10 +57,29 @@ router.post('/', async (req, res) => {
 //DELETE
 router.delete('/:id', async (req, res) => {
   const id = req.params.id
-  /*In both of the "successful" cases of deleting a resource, the backend responds with the status code 204.
-    The two different cases are deleting a blog that exists, and deleting a blog that does not exist in the database*/
-  await Blog.findByIdAndDelete(id)
-  res.status(204).end()
+
+  //check if the blog exists
+  const blog = await Blog.findById(id)
+  if(!blog)
+    res.status(404).end()//blog not found
+  const blogCreator = blog.user.toString()
+
+  //check the token
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'token invalid' })
+  }
+  const userToken = await User.findById(decodedToken.id)
+  if(!userToken)//user not found in users collection
+    return res.status(401).json({ error:'must specify an existent user when deleting a blog' })
+
+  if (blogCreator === userToken._id.toString()){
+    await Blog.findByIdAndDelete(id)
+    res.status(204).end()
+  }
+  else
+    return res.status(401).json({ error: 'a blog can be deleted only by the user who added it' })
+
 })
 
 

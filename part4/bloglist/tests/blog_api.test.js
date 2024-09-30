@@ -37,6 +37,11 @@ describe('Blog Tests:', () => {
     const savedUser = await user.save()//save the user
     testId = savedUser._id.toString()
 
+    //2nd user
+    const passwordHash2 = await bcrypt.hash('2ndpsw', 10)
+    const user2 = new User({ username:'2nduser', passwordHash:passwordHash2 })
+    await user2.save()
+
     //array of Mongoose objectsc reated with the Blog constructor
     const blogObjects = helper.initialBlog.map(blog => new Blog({
       ...blog,
@@ -107,6 +112,25 @@ describe('Blog Tests:', () => {
 
   //POST TESTS
   describe('addition of a new blog', () => {
+
+    test('fails without token'), async () => {
+      const blogBefore = await helper.blogsInDb()
+      const newValidBlog = {
+        title:'titlewithoutoken',
+        author:'notoken',
+        url:'ww.notoken.com',
+        likes: 10
+      }
+
+      await api
+        .post('/api/blogs')
+        .send(newValidBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/)
+
+      const blogAfter = await helper.blogsInDb()
+      assert.deepStrictEqual(blogAfter, blogBefore)
+    }
 
     test('succeeds with valid data and token', async () => {
 
@@ -231,13 +255,16 @@ describe('Blog Tests:', () => {
   //DELETE test
   describe('deletion of a blog', () => {
 
-    //tests for removing an individual note
-    test('succeeds with status code 204 if id is valid', async () => {
+    //tests for removing an individual blog from the owner
+    test('succeeds with status code 204 if token is valid and blog exists', async () => {
       const initialBlog = await helper.blogsInDb()
       const blogToDelete = initialBlog[0]
 
+      const token = await helper.generateToken('testuser', 'testpsw')
+
       await api
         .del(`/api/blogs/${blogToDelete.id}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(204)
 
       const finalBlog = await helper.blogsInDb()
@@ -247,10 +274,50 @@ describe('Blog Tests:', () => {
       assert.strictEqual(finalBlog.length, initialBlog.length-1)
     })
 
-    test('fails with status code 400 if id is invalid', async () => {
+    test('fails with status code 404 if the blog is not in the db', async () => {
+      const initialBlog = await helper.blogsInDb()
+      const blogIdDeleted = await helper.nonExistingId()
+
+      const token = await helper.generateToken('testuser', 'testpsw')
+
       await api
-        .delete('/api/blogs/5a3d5da59070081a82a3445')
-        .expect(400)
+        .del(`/api/blogs/${blogIdDeleted}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(404)
+
+      const finalBlog = await helper.blogsInDb()
+      assert.strictEqual(finalBlog.length, initialBlog.length)
+    })
+
+    test('fails with status code 401 if token is INvalid and blog exists', async () => {
+      const initialBlog = await helper.blogsInDb()
+      const blogToDelete = initialBlog[0]
+
+      const invalidToken = 'Bearer invalidtoken1234567890'
+
+      await api
+        .del(`/api/blogs/${blogToDelete.id}`)
+        .set('Authorization', `Bearer ${invalidToken}`)
+        .expect(401)
+
+      const finalBlog = await helper.blogsInDb()
+      assert.strictEqual(finalBlog.length, initialBlog.length)
+    })
+
+    test('fails with status code 401 if token is valid, blog exists, but the user is not the creator', async () => {
+      const initialBlog = await helper.blogsInDb()
+      const blogToDelete = initialBlog[0]
+
+      const token = await helper.generateToken('2nduser', '2ndpsw')
+
+      const response = await api
+        .del(`/api/blogs/${blogToDelete.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(401)
+
+      const finalBlog = await helper.blogsInDb()
+      assert.strictEqual(finalBlog.length, initialBlog.length)
+      assert(response.body.error.includes('a blog can be deleted only by the user who added it'))
     })
 
   })
