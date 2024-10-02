@@ -29,4 +29,6 @@ The repository is organized into the following parts, each corresponding to diff
 - **part4**:
   - **blog list**: In this part, we focus on building a backend for a blog list application using Express and MongoDB. Key topics include creating RESTful APIs, implementing user authentication with JWT, using Mongoose for database handling, and writing unit and integration tests for the backend with Supertest. Additionally, middleware functions are introduced for handling token extraction, user authentication, and error handling.
 
-
+- **part9**:
+ TypeScript is introduced to enhance the development process for both the frontend and backend. It begins with an overview of TypeScript's benefits, followed by practical steps for setting up TypeScript in a Node.js and Express environment. The course then covers how to integrate TypeScript into a React application, ensuring type safety in components. 
+  - **Patientor**: A full-stack project integrating TypeScript in both backend and frontend.
