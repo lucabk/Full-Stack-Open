@@ -28,15 +28,15 @@ const parseArguments = (args: string[]): inputArg => {
       goal,
       hours
     };
-  }
+  };
 
 const calculateExercises = (hours: number[], goal:number):Score => {
-    let rate, rateDescr
-    let target=goal
-    let average=(hours.reduce((h,k)=>h+k))/hours.length
-    let periodLength = hours.length
-    let trainingDays = hours.filter(d => d>0).length
-    let success =  average>= goal
+    let rate, rateDescr;
+    const target=goal;
+    const average=(hours.reduce((h,k)=>h+k))/hours.length;
+    const periodLength = hours.length;
+    const trainingDays = hours.filter(d => d>0).length;
+    const success =  average>= goal;
     if (average < goal * 0.5) {
         rate = 1;
         rateDescr = 'below target';
@@ -47,8 +47,8 @@ const calculateExercises = (hours: number[], goal:number):Score => {
         rate = 3;
         rateDescr = 'good job';
     }
-    let rating=rate
-    let ratingDescription=rateDescr
+    const rating=rate;
+    const ratingDescription=rateDescr;
     return {
         periodLength,
         trainingDays,
@@ -57,8 +57,8 @@ const calculateExercises = (hours: number[], goal:number):Score => {
         ratingDescription,
         target,
         average
-    }    
-}
+    };    
+};
 
 try {
     const { goal, hours } = parseArguments(process.argv);
