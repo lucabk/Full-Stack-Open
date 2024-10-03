@@ -1,4 +1,5 @@
-const calculateBmi  = (height:number, mass:number):string => {
+
+ const calculateBmi  = (height:number, mass:number):string => {
     const bmi:number = mass/(height/100)**2
     
     if (bmi<16)
@@ -17,33 +18,38 @@ const calculateBmi  = (height:number, mass:number):string => {
         return 'Obese (Class II)'
     else if (bmi>=40)
         return'Obese (Class II)'
+    else return 'out of range'
 
 }
 
-interface input{
-    h:number,
-    w:number
-   
-}
 
-const pArguments = (args: string[]): input => {
-    if (args.length < 4) throw new Error('Not enough arguments')
-    if (args.length > 4) throw new Error('Too many arguments');
-    if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
-        return {
-          h: Number(args[2]),
-          w: Number(args[3])
-        }
-      } else {
-        throw new Error('Provided values were not numbers!');
+if (require.main === module){
+    interface input{
+        h:number,
+        w:number
+       
+    }
+    const pArguments = (args: string[]): input => {
+        if (args.length < 4) throw new Error('Not enough arguments')
+        if (args.length > 4) throw new Error('Too many arguments');
+        if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+            return {
+              h: Number(args[2]),
+              w: Number(args[3])
+            }
+          } else {
+            throw new Error('Provided values were not numbers!');
+          }
+    }
+    
+    try {
+        const { h, w } = pArguments(process.argv);
+        console.log(calculateBmi(h, w));
+      } catch (e) {
+        console.log('Error:', e.message);
       }
+    
 }
 
-try {
-    const { h, w } = pArguments(process.argv);
-    console.log(calculateBmi(h, w));
-  } catch (e) {
-    console.log('Error:', e.message);
-  }
 
-
+export {calculateBmi}
