@@ -1,5 +1,6 @@
 import express  from 'express';
 import { calculateBmi } from './bmiCalculator';
+import { calculateExercises } from './exerciseCalculator';
 
 enum StatusCode{
   Ok=200,
@@ -26,8 +27,21 @@ app.get('/bmi', (req, res) => {
   res.status(StatusCode.Ok).json({weight, height, bmi});
 });
 
-const PORT = 3003;
+app.post('/exercises', (req, res) => {
+  // eslint-disable-next-line
+  const { daily_exercises, target } = req.body;
 
+  if (!daily_exercises || !Array.isArray(daily_exercises) || daily_exercises.some(isNaN) || isNaN(Number(target))) {
+    res.status(StatusCode.BadRequest).json({ error: 'malformatted parameters' });
+    return;
+  }
+
+  const exercises: number[] = daily_exercises.map((n: unknown) => Number(n));
+  const result = calculateExercises(exercises, Number(target));
+  res.status(StatusCode.Ok).json(result);
+});
+
+const PORT = 3003;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

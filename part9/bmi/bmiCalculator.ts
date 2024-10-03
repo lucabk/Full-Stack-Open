@@ -45,8 +45,12 @@ if (require.main === module){
     try {
         const { h, w } = pArguments(process.argv);
         console.log(calculateBmi(h, w));
-      } catch (e) {
-        console.log('Error:', e.message);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          console.log('Error:', e.message);
+        } else {
+          console.log('Unknown error');
+        }
       }
     
 }
