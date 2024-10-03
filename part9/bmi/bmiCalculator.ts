@@ -20,4 +20,30 @@ const calculateBmi  = (height:number, mass:number):string => {
 
 }
 
-console.log(calculateBmi(180, 74))
+interface input{
+    h:number,
+    w:number
+   
+}
+
+const pArguments = (args: string[]): input => {
+    if (args.length < 4) throw new Error('Not enough arguments')
+    if (args.length > 4) throw new Error('Too many arguments');
+    if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+        return {
+          h: Number(args[2]),
+          w: Number(args[3])
+        }
+      } else {
+        throw new Error('Provided values were not numbers!');
+      }
+}
+
+try {
+    const { h, w } = pArguments(process.argv);
+    console.log(calculateBmi(h, w));
+  } catch (e) {
+    console.log('Error:', e.message);
+  }
+
+
