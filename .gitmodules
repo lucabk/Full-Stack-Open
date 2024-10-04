@@ -1,0 +1,3 @@
+[submodule "part9/part9/patientor-frontend"]
+	path = part9/part9/patientor-frontend
+	url = https://github.com/lucabk/patientor-frontend

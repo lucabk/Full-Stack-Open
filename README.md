@@ -32,3 +32,4 @@ The repository is organized into the following parts, each corresponding to diff
 - **part9: TypeScript**
   - **bmi**: first steps with TS.
   - **Patientor**: A full-stack project integrating TypeScript in both frontend (React) and backend (Node.js and Express environment).
+  - **patientor-frontend** Git submodule: https://github.com/lucabk/patientor-frontend part9/patientor-frontend
