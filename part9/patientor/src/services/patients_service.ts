@@ -1,8 +1,9 @@
 import patientsData from '../../data/patients'
-import { patientEntryFiltered } from '../types'
+import { patientEntryFiltered, addPatientEntry } from '../types'
+import { v1 as uuid } from 'uuid'
 
 const patients: patientEntryFiltered[] = patientsData as patientEntryFiltered[]//type assertion
-//all
+//get all
 const getPatients = ():patientEntryFiltered[] => {
     return patients.map(({ id, name, dateOfBirth, gender, occupation }) =>({ 
         id, 
@@ -13,10 +14,21 @@ const getPatients = ():patientEntryFiltered[] => {
     }))
 }
 
-//single
+//get single
 const getPatientById = (id:string):patientEntryFiltered|undefined => {
     const entry = patients.find(p => p.id === id)
     return entry
 }
 
-export default { getPatients, getPatientById }
+//post
+const addPatient = ( newPatient:addPatientEntry ):patientEntryFiltered => {
+    const id = String(uuid())
+    const newPatientEntry = {
+        id,
+        ...newPatient
+    } 
+    patients.push(newPatientEntry)
+    return newPatientEntry
+}
+
+export default { getPatients, getPatientById, addPatient }
