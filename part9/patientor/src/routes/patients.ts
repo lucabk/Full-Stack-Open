@@ -1,7 +1,8 @@
 import express from 'express';
 import patientsService from '../services/patients_service';
-import  toNewPatientEntry  from '../utils';
-import {z} from 'zod'
+import { Request, Response } from 'express';
+import { newPatientParser } from '../middleware';
+import { newPatientEntry } from '../types';
 
 const patientsRouter = express.Router();
 //GET
@@ -17,20 +18,9 @@ patientsRouter.get('/:id', (req, res) => {
         res.status(404).send('patient not found')
 })
 //POST
-patientsRouter.post('/', (req, res) => {
-    try{
-    const newPatientEntry =  toNewPatientEntry(req.body)//toNewPatientEntry receives the request body as a parameter and returns a properly-typed newPatientEntry object.
-    const addedEntry = patientsService.addPatient(newPatientEntry)
+patientsRouter.post('/', newPatientParser,(req: Request<unknown, unknown, newPatientEntry>, res: Response<newPatientEntry>) => {
+    const addedEntry = patientsService.addPatient(req.body)
     res.status(201).json(addedEntry)
-    }
-    catch(error:unknown){
-        if (error instanceof z.ZodError) {
-            res.status(400).send({ error: error.issues });
-          } else {
-            res.status(400).send({ error: 'unknown error' });
-          }
-    }
-
 })  
 
 export default patientsRouter;

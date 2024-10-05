@@ -21,7 +21,7 @@ const getPatientById = (id:string):patientEntryFiltered|undefined => {
 }
 
 //post
-const addPatient = ( newPatient:newPatientEntry ):patientEntryFiltered => {
+const addPatient = ( newPatient:newPatientEntry ):newPatientEntry => {
     const id = String(uuid())
     const newPatientEntry = {
         id,
