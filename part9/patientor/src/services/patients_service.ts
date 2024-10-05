@@ -1,5 +1,5 @@
 import patientsData from '../../data/patients'
-import { patientEntryFiltered, addPatientEntry } from '../types'
+import { patientEntryFiltered, newPatientEntry } from '../types'
 import { v1 as uuid } from 'uuid'
 
 const patients: patientEntryFiltered[] = patientsData as patientEntryFiltered[]//type assertion
@@ -21,7 +21,7 @@ const getPatientById = (id:string):patientEntryFiltered|undefined => {
 }
 
 //post
-const addPatient = ( newPatient:addPatientEntry ):patientEntryFiltered => {
+const addPatient = ( newPatient:newPatientEntry ):patientEntryFiltered => {
     const id = String(uuid())
     const newPatientEntry = {
         id,
