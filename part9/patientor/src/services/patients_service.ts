@@ -1,8 +1,8 @@
 import patientsData from '../../data/patients'
 import { patientEntryFiltered } from '../types'
 
-//Patients
 const patients: patientEntryFiltered[] = patientsData as patientEntryFiltered[]//type assertion
+//all
 const getPatients = ():patientEntryFiltered[] => {
     return patients.map(({ id, name, dateOfBirth, gender, occupation }) =>({ 
         id, 
@@ -13,4 +13,10 @@ const getPatients = ():patientEntryFiltered[] => {
     }))
 }
 
-export default { getPatients }
+//single
+const getPatientById = (id:string):patientEntryFiltered|undefined => {
+    const entry = patients.find(p => p.id === id)
+    return entry
+}
+
+export default { getPatients, getPatientById }
