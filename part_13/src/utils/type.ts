@@ -10,7 +10,7 @@ export enum StatusCode {
 }
 
 
-//ZOD for input validation
+//ZOD for POST validation
 export const newEntrySchema = z.object({
     author : z.string().min(1).max(255).optional(),
     url : z.string().url(),
@@ -18,3 +18,9 @@ export const newEntrySchema = z.object({
     likes : z.number().int().nonnegative().default(0)
 })
 export type newBlogEntry = z.infer< typeof newEntrySchema >
+
+//ZOD for PUT validation
+export const newLikeSchema = z.object({
+    likes : z.number().int().nonnegative()
+})
+export type newLikeEntry = z.infer< typeof newLikeSchema >

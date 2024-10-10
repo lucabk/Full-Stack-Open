@@ -1,10 +1,12 @@
 import express from 'express';
 import { Request, Response } from 'express';
 import { StatusCode } from '../utils/type';
-import { Blog } from '../models'; // import from index.ts
+import { Blog } from '../models';
 import searchByIdMiddleware from '../middleware/searchById_middleware';
 import { newBlogEntry } from '../utils/type';
 import { blogParser } from '../middleware/zodInput_middleware';
+import { updateParser } from '../middleware/zod_update_mid';
+import { newLikeEntry } from '../utils/type';
 
 //router
 const blogRouter = express.Router()
@@ -34,6 +36,29 @@ blogRouter.post('/', blogParser, async (req: Request<unknown, unknown, newBlogEn
   const blogPlain = blog.get({ plain: true }) as newBlogEntry; // Convert to plain object
   res.status(StatusCode.Created).json(blogPlain);
 })
+
+
+//PUT
+blogRouter.put('/:id', searchByIdMiddleware, updateParser, async(req: Request<{ id: string }, unknown, newLikeEntry>, res: Response<newBlogEntry>) => {
+  if(req.blog === undefined){
+    console.error("404 - Blog not found");
+    res.status(StatusCode.NotFound).end()
+    return;
+  }
+  const id:number = Number(req.params.id)
+  await Blog.update(req.body, {
+    where: {id}
+  })
+  const blogUpdated = await Blog.findByPk(id)
+  if(blogUpdated){
+    const blogPlain = blogUpdated.get({ plain: true }) as newBlogEntry; // Convert to plain object
+    res.status(StatusCode.Ok).json(blogPlain);
+  }else {
+    res.status(StatusCode.InternalServerError).end()
+  }
+
+})
+
 
 //DELETE
 blogRouter.delete('/:id', searchByIdMiddleware, async (req, res) => {
