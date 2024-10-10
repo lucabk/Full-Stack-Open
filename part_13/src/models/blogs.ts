@@ -12,7 +12,8 @@ Blog.init(
       autoIncrement: true
     },
     author:{
-      type: DataTypes.STRING // VARCHAR(255)
+      type: DataTypes.STRING, // VARCHAR(255)
+      allowNull: true
     },
     url:{
       type: DataTypes.STRING,
