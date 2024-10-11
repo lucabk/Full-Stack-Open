@@ -23,7 +23,7 @@ export const newUserSchema = z.object({
 })
 export type newUserEntry = z.infer < typeof newUserSchema >
 
-//ZOD for User PUT validation
+//ZOD for User PUT validation (and for Login POST validation)
 export const newUsernameSchema = z.object({
     username: z.string().min(1).max(255),
     password: z.string().min(8).max(255)
