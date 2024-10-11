@@ -2,7 +2,20 @@ import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../utils/db";
 
 
-class User extends Model {}
+// user model interface
+interface UserAttributes {
+    id?: number;
+    username: string;
+    name: string;
+    password: string;
+}
+  
+class User extends Model<UserAttributes> implements UserAttributes {
+    public id!: number;
+    public username!: string;
+    public name!: string;
+    public password!: string;
+}
 User.init(
     {
         id:{

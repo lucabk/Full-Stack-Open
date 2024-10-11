@@ -1,7 +1,7 @@
 import express from 'express';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { User } from '../models';
+import { Blog, User } from '../models';
 import { userParser, userUpdateParser } from '../middleware/zodInput_middleware';
 import { newUserEntry, newUsernameEntry } from '../utils/type';
 import bcrypt from 'bcrypt';
@@ -10,7 +10,11 @@ const userRouter = express.Router()
 
 //GET
 userRouter.get('/', async (_req, res) => {
-    const users = await User.findAll()
+    const users = await User.findAll({
+        include: {
+            model:Blog
+        }
+    })
     res.json(users)
 })
 //by id
@@ -36,8 +40,7 @@ userRouter.post('/', userParser, async (req: Request<unknown, unknown, newUserEn
     const newUserEntry:newUserEntry = { name, username, password:hashedPassword}
 
     const user = await User.create(newUserEntry)
-    const userPlain = user.get({ plain:true }) as newUserEntry
-    res.status(StatusCodes.CREATED).json(userPlain)
+    res.status(StatusCodes.CREATED).json(user)
 })
 
 //PUT
@@ -47,6 +50,7 @@ userRouter.put('/:username', userUpdateParser, async (req: Request<{ username:st
     
     //find user by username
     const userToUpdate = await User.findOne({ where: { username:oldUsername }})
+
     if(!userToUpdate){
         console.error('user not found')
         res.status(StatusCodes.NOT_FOUND).end()
@@ -64,8 +68,7 @@ userRouter.put('/:username', userUpdateParser, async (req: Request<{ username:st
         return;
     }
     //send updated user
-    const userPlain = updatedUser.get({ plain: true }) as newUserEntry;
-    res.status(StatusCodes.OK).json(userPlain);
+    res.status(StatusCodes.OK).json(updatedUser);
 })
 
 export default userRouter

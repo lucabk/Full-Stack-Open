@@ -1,12 +1,14 @@
 import express from 'express';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes'
-import { Blog } from '../models';
+import { Blog, User } from '../models';
 import searchByIdMiddleware from '../middleware/searchById_middleware';
 import { newBlogEntry } from '../utils/type';
 import { blogParser } from '../middleware/zodInput_middleware';
+import { tokenExtractor } from '../middleware/jwt_md';
 import { updateParser } from '../middleware/zod_update_mid';
 import { newLikeEntry } from '../utils/type';
+import { JwtPayload } from 'jsonwebtoken';
 
 //router
 const blogRouter = express.Router()
@@ -15,7 +17,6 @@ const blogRouter = express.Router()
 blogRouter.get('/', async (_req, res) => {
   const blogs = await Blog.findAll()
   res.status(StatusCodes.OK).json(blogs)
-  console.table(JSON.stringify(blogs, null, 2))
 })
 
 //GET by id
@@ -31,10 +32,19 @@ blogRouter.get('/:id', searchByIdMiddleware, (req, res) => {
 
 
 //POST
-blogRouter.post('/', blogParser, async (req: Request<unknown, unknown, newBlogEntry>, res: Response<newBlogEntry>) => {
-  const blog  = await Blog.create(req.body) // blog includes also other methods and properties of Sequelize
-  const blogPlain = blog.get({ plain: true }) as newBlogEntry; // Convert to plain object
-  res.status(StatusCodes.CREATED).json(blogPlain);
+blogRouter.post('/', tokenExtractor, blogParser, async (req: Request<JwtPayload, unknown, newBlogEntry>, res: Response<newBlogEntry>) => {
+  //user's id inside the token
+  const jwt: JwtPayload = req.decodedToken as JwtPayload
+  if(!jwt.id){
+    res.status(401).end()
+    return
+  }
+  const user = await User.findByPk(Number(jwt.id))
+  if(user){
+    const blog  = await Blog.create({ ...req.body, userId: user.id }) 
+    const blogPlain = blog.get({ plain: true }) as newBlogEntry; // blog includes also other methods and properties of Sequelize:  Convert to plain object
+    res.status(StatusCodes.CREATED).json(blogPlain);
+  }
 })
 
 
@@ -51,12 +61,10 @@ blogRouter.put('/:id', searchByIdMiddleware, updateParser, async(req: Request<{ 
   })
   const blogUpdated = await Blog.findByPk(id)
   if(blogUpdated){
-    const blogPlain = blogUpdated.get({ plain: true }) as newBlogEntry; // Convert to plain object
-    res.status(StatusCodes.OK).json(blogPlain);
+    res.status(StatusCodes.OK).json(blogUpdated);
   }else {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).end()
   }
-
 })
 
 
