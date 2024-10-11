@@ -8,10 +8,8 @@ export const errorMiddleware = (error: unknown, _req: express.Request, res: expr
 
     //Sequelize error handling
     if(error instanceof ValidationError){
-      if(error.name === 'SequelizeUniqueConstraintError'){
-        res.status(StatusCodes.CONFLICT).json({ error : 'username must be unique' })
-        return //return before calling Express error handler with next(error), avoiding console errors output
-      }
+      res.status(StatusCodes.CONFLICT).json({ error : error.errors[0].message })
+      return //return before calling Express error handler with next(error), avoiding console errors output
     }
  
     //Zod error handling
