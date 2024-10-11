@@ -1,16 +1,6 @@
 import { z } from 'zod';
 
-export enum StatusCode {
-    Ok = 200,
-    Created=201,
-    NoContent=204,
-    BadRequest = 400,
-    NotFound = 404,
-    InternalServerError=500
-}
-
-
-//ZOD for POST validation
+//ZOD for Blog POST validation
 export const newEntrySchema = z.object({
     author : z.string().min(1).max(255).optional(),
     url : z.string().url(),
@@ -19,8 +9,23 @@ export const newEntrySchema = z.object({
 })
 export type newBlogEntry = z.infer< typeof newEntrySchema >
 
-//ZOD for PUT validation
+//ZOD for Blog PUT validation
 export const newLikeSchema = z.object({
     likes : z.number().int().nonnegative()
 })
 export type newLikeEntry = z.infer< typeof newLikeSchema >
+
+//ZOD for User POST validation
+export const newUserSchema = z.object({
+    name : z.string().min(1).max(255),
+    username: z.string().min(1).max(255),
+    password: z.string().min(8).max(255)
+})
+export type newUserEntry = z.infer < typeof newUserSchema >
+
+//ZOD for User PUT validation
+export const newUsernameSchema = z.object({
+    username: z.string().min(1).max(255),
+    password: z.string().min(8).max(255)
+})
+export type newUsernameEntry = z.infer < typeof newUsernameSchema >

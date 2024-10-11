@@ -1,0 +1,7 @@
+PUT http://localhost:3003/api/users/prova
+Content-Type: application/json
+
+{
+    "username": "rest username",
+    "password": "fakepassword"
+}
