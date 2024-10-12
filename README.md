@@ -34,5 +34,5 @@ The repository is organized into the following parts, each corresponding to diff
   - **Patientor**: A full-stack project integrating TypeScript in both frontend (React) and backend (Node.js and Express environment).
   - **patientor-frontend**: https://github.com/lucabk/patientor-frontend 
 
-  - **part_13: Using relational databases** (in progress...)
-  Developing blog list app backend with Express Typescript Docker JWT and Sequelize
+- **part_13: Using relational databases** (in progress...)
+  - Development of the blog list app backend with Express, Typescript, Docker, JWT and Sequelize
