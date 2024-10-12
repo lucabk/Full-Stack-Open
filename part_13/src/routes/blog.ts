@@ -15,11 +15,17 @@ const blogRouter = express.Router()
 
 //GET all
 blogRouter.get('/', async (_req, res) => {
-  const blogs = await Blog.findAll()
+  const blogs = await Blog.findAll({
+    attributes: { exclude: ['userId'] },
+    include: {
+      model: User,
+      attributes: ['name']
+    }
+  })
   res.status(StatusCodes.OK).json(blogs)
 })
 
-//GET by id
+// by id
 blogRouter.get('/:id', searchByIdMiddleware, (req, res) => {
   if(req.blog === undefined){
     console.error("404 - Blog not found");
@@ -42,8 +48,7 @@ blogRouter.post('/', tokenExtractor, blogParser, async (req: Request<JwtPayload,
   const user = await User.findByPk(Number(jwt.id))
   if(user){
     const blog  = await Blog.create({ ...req.body, userId: user.id }) 
-    const blogPlain = blog.get({ plain: true }) as newBlogEntry; // blog includes also other methods and properties of Sequelize:  Convert to plain object
-    res.status(StatusCodes.CREATED).json(blogPlain);
+    res.status(StatusCodes.CREATED).json(blog);
   }
 })
 
@@ -69,14 +74,21 @@ blogRouter.put('/:id', searchByIdMiddleware, updateParser, async(req: Request<{ 
 
 
 //DELETE
-blogRouter.delete('/:id', searchByIdMiddleware, async (req, res) => {
-  if (req.blog) {
+blogRouter.delete('/:id', tokenExtractor, searchByIdMiddleware, async (req:Request, res:Response) => {
+  const jwt: JwtPayload = req.decodedToken as JwtPayload
+  if(!jwt.id || !req.blog){
+    res.status(StatusCodes.UNAUTHORIZED).end()
+    return
+  }
+  //find user with the id binded to JWT
+  const user = await User.findByPk(Number(jwt.id))
+  //if the user exists and created the blog
+  if(user && user.id === req.blog.userId){
     await req.blog.destroy()
     res.status(StatusCodes.NO_CONTENT).end()
-  }
-  else{
-    console.error("404 - Blog not found");
-    res.status(StatusCodes.NOT_FOUND).json({ error: 'blog not found' });
+  }else{
+    res.status(StatusCodes.FORBIDDEN).end()
+    return  
   }
 })
 

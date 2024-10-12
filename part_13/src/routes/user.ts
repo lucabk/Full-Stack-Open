@@ -8,11 +8,12 @@ import bcrypt from 'bcrypt';
 
 const userRouter = express.Router()
 
-//GET
+//GET all
 userRouter.get('/', async (_req, res) => {
     const users = await User.findAll({
         include: {
-            model:Blog
+            model:Blog,
+            attributes: { exclude: ['userId'] }
         }
     })
     res.json(users)
