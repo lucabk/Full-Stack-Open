@@ -29,7 +29,8 @@ blogRouter.get('/', async (req:Request, res:Response<Blog[]>) => {
       model: User,
       attributes: ['name']
     },
-    where
+    where,
+    order:[ ['likes', 'DESC']]
   })
   res.status(StatusCodes.OK).json(blogs)
 })
