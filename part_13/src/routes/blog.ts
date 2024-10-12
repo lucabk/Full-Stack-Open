@@ -9,18 +9,28 @@ import { tokenExtractor } from '../middleware/jwt_md';
 import { updateParser } from '../middleware/zod_update_mid';
 import { newLikeEntry } from '../utils/type';
 import { JwtPayload } from 'jsonwebtoken';
+import { Op, WhereOptions } from 'sequelize';
 
 //router
 const blogRouter = express.Router()
 
 //GET all
-blogRouter.get('/', async (_req, res) => {
+blogRouter.get('/', async (req:Request, res:Response<Blog[]>) => {
+  
+  const where:WhereOptions = {} //query WHERE
+  if (req.query.search){
+    where.title = {
+      [Op.iLike]: `%${String(req.query.search)}%`
+    }
+  }
+
   const blogs = await Blog.findAll({
     attributes: { exclude: ['userId'] },
     include: {
       model: User,
       attributes: ['name']
-    }
+    },
+    where
   })
   res.status(StatusCodes.OK).json(blogs)
 })
