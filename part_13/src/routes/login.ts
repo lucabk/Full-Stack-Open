@@ -34,8 +34,7 @@ loginRouter.post('/', userUpdateParser, async (req: Request<unknown, unknown, ne
     Once the token expires, the client app needs to get a new token. Usually, this happens by forcing the user to re-login to the app*/
     const token = jwt.sign(
         userForToken,
-        KEY,
-        { expiresIn: 60*60 }
+        KEY                                         //,{ expiresIn: 60*60 }
     )
     res.send({token, username})
     console.log('TOKEN sent')
