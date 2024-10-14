@@ -24,10 +24,27 @@ const runMigrations = async () => {
   })
 }
 
+// Seed
+const runSeeds = async () => {
+  const seeder = new Umzug({
+    migrations: {
+      glob: '/home/luca/fullstackopen/Full-Stack-Open/part_13/src/seeds/*.ts', 
+    },
+    context: sequelize.getQueryInterface(),
+    storage: new SequelizeStorage({ sequelize, tableName: 'seeds' }),
+    logger: console,
+  });
+  const seeds = await seeder.up();
+  console.log('Seeds up to date', {
+    files: seeds.map((seed) => seed.name),
+  });
+}
+
 export const connectToDatabase = async () => {
     try {
       await sequelize.authenticate()
       await runMigrations()
+      await runSeeds()
       console.log('connected to the database')
     } catch (err) {
       console.log('failed to connect to the database',err)
