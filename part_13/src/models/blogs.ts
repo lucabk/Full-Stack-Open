@@ -8,6 +8,7 @@ interface BlogAttributes {
   url:string
   title:string
   likes:number
+  year?: number
   userId: number
 }
 // Model definition
@@ -17,6 +18,7 @@ class Blog extends Model<BlogAttributes> implements BlogAttributes {
   public url!: string;
   public title!: string;
   public likes!: number;
+  public year?: number | undefined;
   public userId!: number;
 }
 Blog.init(
@@ -43,6 +45,10 @@ Blog.init(
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
+    year:{
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     userId:{
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -55,7 +61,7 @@ Blog.init(
   {
     sequelize, // We need to pass the connection instance
     tableName: 'blogs', //explicit table name inference
-    timestamps: false, // not have to use the timestamps columns (created_at and updated_at)
+    timestamps: true, // not have to use the timestamps columns (created_at and updated_at)
     modelName: 'blog', // We need to choose the model name
   },
 );

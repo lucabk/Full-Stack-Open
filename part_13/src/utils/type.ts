@@ -5,7 +5,8 @@ export const newEntrySchema = z.object({
     author : z.string().min(1).max(255).optional(),
     url : z.string().url(),
     title : z.string().min(1).max(255),
-    likes : z.number().int().nonnegative().default(0)
+    likes : z.number().int().nonnegative().default(0),
+    year : z.number().int().min(1991).max(new Date().getFullYear()).optional()
 })
 export type newBlogEntry = z.infer< typeof newEntrySchema >
 
