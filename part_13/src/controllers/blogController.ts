@@ -5,7 +5,8 @@ import { newBlogEntry } from '../utils/type';
 import { newLikeEntry } from '../utils/type';
 import { JwtPayload } from 'jsonwebtoken';
 import { Op, WhereOptions } from 'sequelize';
-import { CustomError } from '../utils/type';
+import { factory, ErrorMsg } from '../utils/errorFactory';
+
 
 const getAllBlogs = async (req:Request, res:Response<Blog[]>) => {
   
@@ -29,7 +30,7 @@ const getAllBlogs = async (req:Request, res:Response<Blog[]>) => {
 
 const getBlogById = (req:Request, res:Response< Blog | { error: string }>, next:NextFunction) => {
     if(req.blog === undefined){
-      const error:CustomError = { msg:'blog not found', statusCode:StatusCodes.NOT_FOUND}
+      const error:ErrorMsg = factory.getError(StatusCodes.NOT_FOUND, 'blog not found')
       next(error)
       return;
     }

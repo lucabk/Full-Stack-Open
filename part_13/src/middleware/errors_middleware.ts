@@ -2,14 +2,14 @@ import { StatusCodes } from 'http-status-codes'
 import { ValidationError } from "sequelize";
 import { z } from 'zod';
 import express from "express";
-import { CustomError } from '../utils/type';
+import { ErrorMsg } from '../utils/errorFactory';
 
 export const errorMiddleware = (error: unknown, _req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.error('errorMiddleware:',error);
 
-    // Custom error handling
-    if ((error as CustomError).msg && (error as CustomError).statusCode){
-      const err = error as CustomError
+    // Factory error handling
+    if ((error as ErrorMsg).msg && (error as ErrorMsg).statusCode){
+      const err = error as ErrorMsg
       res.status(err.statusCode).json({ error : err.msg })
       return
     }

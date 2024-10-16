@@ -31,8 +31,8 @@ export const newUsernameSchema = z.object({
 })
 export type newUsernameEntry = z.infer < typeof newUsernameSchema >
 
-//Custom Error
+/*Custom Error
 export interface CustomError {
     msg: string
     statusCode: number
-}
+}*/
