@@ -2,10 +2,23 @@ import { Sequelize } from "sequelize";
 import { DATABASE_URL } from "./config";
 import { Umzug, SequelizeStorage } from "umzug";
 
-// Create a new instance of Sequelize using the database URL from environment variables
-export const sequelize = new Sequelize(DATABASE_URL as string, {
-    dialect: 'postgres',
-});
+class Database {
+  private static instance: Sequelize;
+
+  private constructor() {}
+
+  public static getInstance(): Sequelize {
+    if (!Database.instance) {
+      // Create a new instance of Sequelize using the database URL from environment variables
+      Database.instance = new Sequelize(DATABASE_URL as string, {
+        dialect: 'postgres',
+      });
+    }
+    return Database.instance;
+  }
+}
+
+export const sequelize = Database.getInstance();
 
 // Migration
 const runMigrations = async () => {
