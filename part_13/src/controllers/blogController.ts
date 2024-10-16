@@ -28,7 +28,7 @@ const getAllBlogs = async (req:Request, res:Response<Blog[]>) => {
     res.status(StatusCodes.OK).json(blogs)
   }
 
-const getBlogById = (req:Request, res:Response< Blog | { error: string }>, next:NextFunction) => {
+const getBlogById = (req:Request, res:Response< Blog >, next:NextFunction) => {
     if(req.blog === undefined){
       const error:ErrorMsg = factory.getError(StatusCodes.NOT_FOUND, 'blog not found')
       next(error)
@@ -38,11 +38,12 @@ const getBlogById = (req:Request, res:Response< Blog | { error: string }>, next:
     console.table(req.blog.toJSON())
 }
 
-const createBlog = async (req: Request<JwtPayload, unknown, newBlogEntry>, res: Response<newBlogEntry>) => {
+const createBlog = async (req: Request<JwtPayload, unknown, newBlogEntry>, res: Response<newBlogEntry>, next:NextFunction) => {
     //user's id inside the token
     const jwt: JwtPayload = req.decodedToken as JwtPayload
     if(!jwt.id){
-      res.status(401).end()
+      const error:ErrorMsg = factory.getError(StatusCodes.UNAUTHORIZED, 'missign jwt id')
+      next(error)
       return
     }
     const user = await User.findByPk(Number(jwt.id))
@@ -52,10 +53,10 @@ const createBlog = async (req: Request<JwtPayload, unknown, newBlogEntry>, res: 
     }
 } 
 
-const updateBlog = async(req: Request<{ id: string }, unknown, newLikeEntry>, res: Response<newBlogEntry>) => {
+const updateBlog = async(req: Request<{ id: string }, unknown, newLikeEntry>, res: Response<newBlogEntry>, next:NextFunction) => {
     if(req.blog === undefined){
-      console.error("404 - Blog not found");
-      res.status(StatusCodes.NOT_FOUND).end()
+      const error:ErrorMsg = factory.getError(StatusCodes.NOT_FOUND, 'Blog not found')
+      next(error)
       return;
     }
     const id:number = Number(req.params.id)
@@ -66,14 +67,16 @@ const updateBlog = async(req: Request<{ id: string }, unknown, newLikeEntry>, re
     if(blogUpdated){
       res.status(StatusCodes.OK).json(blogUpdated);
     }else {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).end()
+      const error:ErrorMsg = factory.getError(StatusCodes.INTERNAL_SERVER_ERROR, 'Server Error')
+      next(error)
     }
 }
 
-const deleteBlog = async (req:Request, res:Response) => {
+const deleteBlog = async (req:Request, res:Response, next:NextFunction) => {
     const jwt: JwtPayload = req.decodedToken as JwtPayload
     if(!jwt.id || !req.blog){
-      res.status(StatusCodes.UNAUTHORIZED).end()
+      const error:ErrorMsg = factory.getError(StatusCodes.UNAUTHORIZED, 'jtw.id or blog missing')
+      next(error)
       return
     }
     //find user with the id binded to JWT
@@ -83,7 +86,8 @@ const deleteBlog = async (req:Request, res:Response) => {
       await req.blog.destroy()
       res.status(StatusCodes.NO_CONTENT).end()
     }else{
-      res.status(StatusCodes.FORBIDDEN).end()
+      const error:ErrorMsg = factory.getError(StatusCodes.FORBIDDEN, 'the current user is not the creator of the blog')
+      next(error)
       return  
     }
 }
