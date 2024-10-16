@@ -2,9 +2,17 @@ import { StatusCodes } from 'http-status-codes'
 import { ValidationError } from "sequelize";
 import { z } from 'zod';
 import express from "express";
+import { CustomError } from '../utils/type';
 
 export const errorMiddleware = (error: unknown, _req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.error(error);
+    console.error('errorMiddleware:',error);
+
+    // Custom error handling
+    if ((error as CustomError).msg && (error as CustomError).statusCode){
+      const err = error as CustomError
+      res.status(err.statusCode).json({ error : err.msg })
+      return
+    }
 
     //Sequelize error handling
     if(error instanceof ValidationError){

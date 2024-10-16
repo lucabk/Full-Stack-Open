@@ -30,3 +30,9 @@ export const newUsernameSchema = z.object({
     password: z.string().min(8).max(255)
 })
 export type newUsernameEntry = z.infer < typeof newUsernameSchema >
+
+//Custom Error
+export interface CustomError {
+    msg: string
+    statusCode: number
+}

@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes'
 import { Blog, User } from '../models';
 import { newBlogEntry } from '../utils/type';
 import { newLikeEntry } from '../utils/type';
 import { JwtPayload } from 'jsonwebtoken';
 import { Op, WhereOptions } from 'sequelize';
-
+import { CustomError } from '../utils/type';
 
 const getAllBlogs = async (req:Request, res:Response<Blog[]>) => {
   
@@ -27,10 +27,10 @@ const getAllBlogs = async (req:Request, res:Response<Blog[]>) => {
     res.status(StatusCodes.OK).json(blogs)
   }
 
-const getBlogById = (req:Request, res:Response< Blog | { error: string }>) => {
+const getBlogById = (req:Request, res:Response< Blog | { error: string }>, next:NextFunction) => {
     if(req.blog === undefined){
-      console.error("404 - Blog not found");
-      res.status(StatusCodes.NOT_FOUND).json({ error: 'blog not found' });
+      const error:CustomError = { msg:'blog not found', statusCode:StatusCodes.NOT_FOUND}
+      next(error)
       return;
     }
     res.json(req.blog)

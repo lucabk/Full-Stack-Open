@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 module.exports = {
   up: async ({ context: queryInterface }: { context: QueryInterface }) => {
     const users = await queryInterface.sequelize.query(
-      `SELECT id FROM users WHERE username = 'user1@example.com'OR username = 'user2@example.com';`
+      `SELECT id FROM users WHERE username = 'user1@example.com' OR username = 'user2@example.com';`
     );
 
     if (users[0].length === 0) {
@@ -27,7 +27,7 @@ module.exports = {
     }
 
     const blogs = await queryInterface.sequelize.query(
-      `SELECT id FROM blogs WHERE title = 'Blog One';`
+      `SELECT id FROM blogs WHERE title = 'Blog One' OR title= 'Blog Two';`
     );
 
     if (blogs[0].length === 0) {
