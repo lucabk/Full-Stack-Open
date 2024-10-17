@@ -19,5 +19,21 @@ services:
     ports:
       - 8080:8080
 
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      DATABASE_URL: ${DATABASE_URL_PROD}
+      JWT_SECRET: ${KEY}
+    depends_on:
+      - db
+
+
 volumes:
   db-data:
