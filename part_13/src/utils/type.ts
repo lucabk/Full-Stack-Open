@@ -30,3 +30,9 @@ export const newUsernameSchema = z.object({
     password: z.string().min(8).max(255)
 })
 export type newUsernameEntry = z.infer < typeof newUsernameSchema >
+
+//reading list status
+export enum bookStatus {
+    READ = 'read',
+    UNREAD = 'unread'
+}

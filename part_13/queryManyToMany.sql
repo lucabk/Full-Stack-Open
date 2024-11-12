@@ -1,0 +1,1 @@
+select * from blogs join memberships on blogs.id = memberships."blogId" join "readingLists" on memberships."readingListId" = "readingLists".id;

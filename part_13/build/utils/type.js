@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newUsernameSchema = exports.newUserSchema = exports.newLikeSchema = exports.newEntrySchema = void 0;
+exports.bookStatus = exports.newUsernameSchema = exports.newUserSchema = exports.newLikeSchema = exports.newEntrySchema = void 0;
 const zod_1 = require("zod");
 //ZOD for Blog POST validation
 exports.newEntrySchema = zod_1.z.object({
@@ -25,3 +25,9 @@ exports.newUsernameSchema = zod_1.z.object({
     username: zod_1.z.string().min(1).max(255),
     password: zod_1.z.string().min(8).max(255)
 });
+//reading list status
+var bookStatus;
+(function (bookStatus) {
+    bookStatus["READ"] = "read";
+    bookStatus["UNREAD"] = "unread";
+})(bookStatus || (exports.bookStatus = bookStatus = {}));
