@@ -4,12 +4,14 @@ import { bookStatus } from "../utils/type";
 
 interface readingListAttributes {
     id?: number
-    status: string
+    status?: string
+    userId: number
 }
 
 class ReadingList extends Model<readingListAttributes> implements readingListAttributes {
     public id!:number
     public status!: bookStatus
+    public userId!: number
 }
 
 ReadingList.init(
@@ -22,6 +24,14 @@ ReadingList.init(
         status:{
             type:DataTypes.STRING,
             defaultValue: bookStatus.UNREAD
+        },
+        userId:{
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'users',
+                key: 'id'
+            }
         }
     },
     {

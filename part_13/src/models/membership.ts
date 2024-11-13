@@ -1,8 +1,17 @@
 import { DataTypes, Model} from "sequelize";
 import { sequelize } from "../utils/db";
 
+interface membershipAttributes {
+    id?: number
+    readingListId: number
+    blogId: number
+}
 
-class Membership extends Model {}
+class Membership extends Model<membershipAttributes> implements membershipAttributes {
+    id!: number
+    readingListId!: number
+    blogId!: number
+}
 
 Membership.init(
     {

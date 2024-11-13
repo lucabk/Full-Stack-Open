@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { Blog, User } from '../models';
-import { newUserEntry, newUsernameEntry } from '../utils/type';
+import { Blog, ReadingList, User } from '../models';
+import { getUserByIdResponse, newUserEntry, newUsernameEntry, ReadingListQuery } from '../utils/type';
 import bcrypt from 'bcrypt';
 
 
@@ -15,15 +15,37 @@ const getAllUsers = async (_req:Request, res:Response<User[]>) => {
     res.json(users)
 }
 
-const getUser =  async (req:Request, res:Response<User | { error: string }>) => {
+const getUser =  async (req:Request, res:Response< getUserByIdResponse | { error: string }>, _next:NextFunction) => {
+    //find user in db
     const id:number = Number(req.params.id)
     const user = await User.findByPk(id)
+
     if(!user){
         console.error("404 - user not found")
         res.status(StatusCodes.NOT_FOUND).json({ error: 'user not found'})
         return
-    }   
-    res.json(user)
+    }
+
+    //find reading list associated to the user
+    const ReadingListQuery = await ReadingList.findAll({
+        include: 
+            {
+                model: Blog,
+                attributes: { exclude: ['userId', 'createdAt', 'updatedAt'] },
+                through: {
+                    attributes: []
+                }
+            },
+            where : { userId : id }
+    }) as unknown as ReadingListQuery[] //Copilot hint
+
+    const blogsToRead = ReadingListQuery.map(r => r.blogs[0])
+    //res   
+    res.json({
+        name : user.name,
+        username : user.username,
+        readings : blogsToRead
+    })
 }
 
 const createUser = async (req: Request<unknown, unknown, newUserEntry>, res: Response<newUserEntry>) => {

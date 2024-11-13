@@ -3,4 +3,3 @@ node_modules
 .dockerignore
 newman/postman_env.json
 package-lock.json
-build

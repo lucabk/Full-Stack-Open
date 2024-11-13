@@ -10,4 +10,4 @@ Blog.belongsTo(User)
 Blog.belongsToMany(ReadingList, { through:Membership })
 ReadingList.belongsToMany(Blog, { through:Membership })
 
-export { Blog, User }
+export { Blog, User, ReadingList, Membership }

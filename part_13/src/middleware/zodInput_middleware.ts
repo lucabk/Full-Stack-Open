@@ -1,32 +1,26 @@
 import { Request, Response, NextFunction } from 'express';
-import { newEntrySchema, newUserSchema, newUsernameSchema } from '../utils/type';
+import { newEntrySchema, newReadingListSchema, newUserSchema, newUsernameSchema } from '../utils/type';
 
 export const blogParser = (req: Request, _res: Response, next: NextFunction) => {
     console.log("blogParser")
-    try{
-        newEntrySchema.parse(req.body)
-    }catch(err:unknown){
-        next(err)
-    }
+    newEntrySchema.parse(req.body)
     next()
 }
 
 export const userParser = (req: Request, _res: Response, next: NextFunction) => {
     console.log('userParser')
-    try{
-        newUserSchema.parse(req.body)
-    }catch(err:unknown){
-        next(err)
-    }
+    newUserSchema.parse(req.body)
     next()
 }
 
 export const userUpdateParser = ( req: Request, _res: Response, next: NextFunction) => {
     console.log('userUpdateParser')
-    try{
-        newUsernameSchema.parse(req.body)
-    }catch(err:unknown){
-        next(err)
-    }
+    newUsernameSchema.parse(req.body)
+    next()
+}
+
+export const readingListParser = ( req: Request, _res: Response, next: NextFunction) => {
+    console.log('readingListParser')
+    newReadingListSchema.parse(req.body)
     next()
 }

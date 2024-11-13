@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { Blog } from '../models';
 
 //ZOD for Blog POST validation
 export const newEntrySchema = z.object({
@@ -31,8 +32,32 @@ export const newUsernameSchema = z.object({
 })
 export type newUsernameEntry = z.infer < typeof newUsernameSchema >
 
+//ZOD for ReadingList POST validation
+export const newReadingListSchema = z.object({
+    blogId : z.number().int().nonnegative(),
+    userId : z.number().int().nonnegative()
+})
+export type newReadingListEntry = z.infer < typeof newReadingListSchema >
+
 //reading list status
 export enum bookStatus {
     READ = 'read',
     UNREAD = 'unread'
+}
+
+//get user by id response interface
+export interface getUserByIdResponse {
+    name : string
+    username : string
+    readings : Blog[]
+}
+
+//ReadingListQuery response interface
+export interface ReadingListQuery {
+    id: number;
+    status: string;
+    userId: number;
+    createdAt: string;
+    updatedAt: string;
+    blogs: Blog[];
 }
