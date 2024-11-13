@@ -41,18 +41,27 @@ const getUser =  async (req:Request, res:Response< getUserByIdResponse >, next:N
     }) as unknown as ReadingListQuery[] //Copilot hint
 
     //array of blogs with ReadingList id and status associated
-    const blogsToRead = ReadingListQuery.map(r => 
+    let allBlogs = ReadingListQuery.map(r => 
         ({ 
             readingList_id : r.id,
             status : r.status as blogStatus,
             blogs : r.blogs[0]
         })
     )
-    //res   
+
+    //query string
+    if (req.query.read === 'true'){
+        allBlogs = allBlogs.filter( e => e.status === blogStatus.READ)
+    }
+    else if (req.query.read === 'false'){
+        allBlogs = allBlogs.filter( e => e.status === blogStatus.UNREAD)
+    }
+
+    //default res   
     res.json({
         name : user.name,
         username : user.username,
-        readings : blogsToRead
+        readings : allBlogs
     })
 }
 
