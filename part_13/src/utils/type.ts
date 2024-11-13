@@ -49,7 +49,11 @@ export enum bookStatus {
 export interface getUserByIdResponse {
     name : string
     username : string
-    readings : Blog[]
+    readings : {
+        readingList_id:number
+        status:bookStatus
+        blogs:Blog
+    }[]
 }
 
 //ReadingListQuery response interface

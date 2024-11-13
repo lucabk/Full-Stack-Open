@@ -24,7 +24,7 @@ export const addToReadingList = async (req:Request<unknown, unknown, newReadingL
     res.status(StatusCodes.CREATED).json(
         {
             message : 'blog added to reading list',
-            membershipId : newMembership.id
+            membership_id : newMembership.id
         }
     )
 }

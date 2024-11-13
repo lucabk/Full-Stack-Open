@@ -20,8 +20,9 @@ class GenericError implements ErrorMsg{
     }
 }
 
+class BadRequestError extends GenericError{}        //400
 class UnauthorizedError extends GenericError{}      //401
-class ForbiddenError extends GenericError{}
+class ForbiddenError extends GenericError{}         //403
 class NotFoundError extends GenericError{}          //404
 class InternalServerError extends GenericError{}    //500
 
@@ -41,6 +42,9 @@ class ErrorFactory {
                 break
             case StatusCodes.FORBIDDEN:
                 retval = new ForbiddenError(msg, code)
+                break
+            case StatusCodes.BAD_REQUEST:
+                retval = new BadRequestError(msg, code)
                 break
             default:
                 throw new Error(`Factory Error: Unhandled status code: ${code}`)

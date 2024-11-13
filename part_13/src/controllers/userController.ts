@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Blog, ReadingList, User } from '../models';
-import { getUserByIdResponse, newUserEntry, newUsernameEntry, ReadingListQuery } from '../utils/type';
+import { bookStatus, getUserByIdResponse, newUserEntry, newUsernameEntry, ReadingListQuery } from '../utils/type';
 import bcrypt from 'bcrypt';
+import { ErrorMsg, factory } from '../utils/errorFactory';
 
 
 const getAllUsers = async (_req:Request, res:Response<User[]>) => {
@@ -15,14 +16,14 @@ const getAllUsers = async (_req:Request, res:Response<User[]>) => {
     res.json(users)
 }
 
-const getUser =  async (req:Request, res:Response< getUserByIdResponse | { error: string }>, _next:NextFunction) => {
+const getUser =  async (req:Request, res:Response< getUserByIdResponse >, next:NextFunction) => {
     //find user in db
     const id:number = Number(req.params.id)
     const user = await User.findByPk(id)
 
     if(!user){
-        console.error("404 - user not found")
-        res.status(StatusCodes.NOT_FOUND).json({ error: 'user not found'})
+        const err:ErrorMsg = factory.getError(StatusCodes.NOT_FOUND, 'user not found')
+        next(err)
         return
     }
 
@@ -39,7 +40,14 @@ const getUser =  async (req:Request, res:Response< getUserByIdResponse | { error
             where : { userId : id }
     }) as unknown as ReadingListQuery[] //Copilot hint
 
-    const blogsToRead = ReadingListQuery.map(r => r.blogs[0])
+    //array of blogs with ReadingList id and status associated
+    const blogsToRead = ReadingListQuery.map(r => 
+        ({ 
+            readingList_id : r.id,
+            status : r.status as bookStatus,
+            blogs : r.blogs[0]
+        })
+    )
     //res   
     res.json({
         name : user.name,
