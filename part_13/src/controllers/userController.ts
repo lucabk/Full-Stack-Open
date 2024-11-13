@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Blog, ReadingList, User } from '../models';
-import { bookStatus, getUserByIdResponse, newUserEntry, newUsernameEntry, ReadingListQuery } from '../utils/type';
+import { blogStatus, getUserByIdResponse, newUserEntry, newUsernameEntry, ReadingListQuery } from '../utils/type';
 import bcrypt from 'bcrypt';
 import { ErrorMsg, factory } from '../utils/errorFactory';
 
@@ -44,7 +44,7 @@ const getUser =  async (req:Request, res:Response< getUserByIdResponse >, next:N
     const blogsToRead = ReadingListQuery.map(r => 
         ({ 
             readingList_id : r.id,
-            status : r.status as bookStatus,
+            status : r.status as blogStatus,
             blogs : r.blogs[0]
         })
     )

@@ -39,8 +39,15 @@ export const newReadingListSchema = z.object({
 })
 export type newReadingListEntry = z.infer < typeof newReadingListSchema >
 
+//ZOD update List PUT validation
+export const newListStatusSchema = z.object({
+    read : z.boolean()
+})
+export type newListStatusEntry = z.infer < typeof newListStatusSchema > 
+
+/********************************************************************** */
 //reading list status
-export enum bookStatus {
+export enum blogStatus {
     READ = 'read',
     UNREAD = 'unread'
 }
@@ -51,7 +58,7 @@ export interface getUserByIdResponse {
     username : string
     readings : {
         readingList_id:number
-        status:bookStatus
+        status:blogStatus
         blogs:Blog
     }[]
 }

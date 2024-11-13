@@ -1,5 +1,5 @@
 import { DataTypes, QueryInterface } from 'sequelize';
-import { bookStatus } from '../utils/type';
+import { blogStatus } from '../utils/type';
 
 module.exports = {
   up: async ({ context: queryInterface }: { context: QueryInterface }) => {
@@ -12,7 +12,7 @@ module.exports = {
         },
         status:{
             type:DataTypes.STRING,
-            defaultValue: bookStatus.UNREAD
+            defaultValue: blogStatus.UNREAD
         
         }, 
         userId: {

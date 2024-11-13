@@ -1,13 +1,15 @@
 // Declaration Merging
 import { JwtPayload } from "jsonwebtoken";
-import { Blog } from "../../models";
+import { Blog, ReadingList, User } from "../../models";
 
 // include  '"typeRoots": ["./src/types"]' in tsconfig.json
 declare global {
   namespace Express {
     export interface Request {
-      blog?: Blog;
+      blog?: Blog
       decodedToken:JwtPayload|string
+      readingList:ReadingList
+      user: User
     }
   }
 }

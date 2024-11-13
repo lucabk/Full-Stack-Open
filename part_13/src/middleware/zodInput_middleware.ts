@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { newEntrySchema, newReadingListSchema, newUserSchema, newUsernameSchema } from '../utils/type';
+import { newEntrySchema, newListStatusSchema, newReadingListSchema, newUserSchema, newUsernameSchema } from '../utils/type';
 
 export const blogParser = (req: Request, _res: Response, next: NextFunction) => {
     console.log("blogParser")
@@ -22,5 +22,11 @@ export const userUpdateParser = ( req: Request, _res: Response, next: NextFuncti
 export const readingListParser = ( req: Request, _res: Response, next: NextFunction) => {
     console.log('readingListParser')
     newReadingListSchema.parse(req.body)
+    next()
+}
+
+export const updateListParser = ( req: Request, _res: Response, next: NextFunction) => {
+    console.log('updateListParser')
+    newListStatusSchema.parse(req.body)
     next()
 }
