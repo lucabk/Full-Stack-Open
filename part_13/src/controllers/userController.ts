@@ -6,14 +6,29 @@ import bcrypt from 'bcrypt';
 import { ErrorMsg, factory } from '../utils/errorFactory';
 
 
-const getAllUsers = async (_req:Request, res:Response<User[]>) => {
-    const users = await User.findAll({
-        include: {
-            model:Blog,
-            attributes: { exclude: ['userId'] }
-        }
-    })
-    res.json(users)
+const getAllUsers = async (req:Request, res:Response<User[]>) => {
+
+    //fetch disabled users
+    if(req.query.disabled === 'true'){
+        const disabledUsers = await User.scope('disabled').findAll({
+            include: {
+                model:Blog,
+                attributes: { exclude: ['userId'] }
+            }
+        })
+        res.json(disabledUsers)
+    }
+
+    //retrieve only active users
+    else{
+        const users = await User.findAll({
+            include: {
+                model:Blog,
+                attributes: { exclude: ['userId'] }
+            }
+        })
+        res.json(users)
+    }
 }
 
 const getUser =  async (req:Request, res:Response< getUserByIdResponse >, next:NextFunction) => {
