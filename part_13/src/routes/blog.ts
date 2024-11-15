@@ -1,9 +1,10 @@
 import express from 'express';
 import searchByIdMiddleware from '../middleware/searchById_middleware';
 import { blogParser } from '../middleware/zodInput_middleware';
-import { tokenExtractor } from '../middleware/jwt_md';
 import { updateParser } from '../middleware/zod_update_mid';
 import blogController from '../controllers/blogController';
+import * as authCOR from '../middleware/auth_middleware'
+
 
 //router
 const blogRouter = express.Router()
@@ -19,7 +20,7 @@ blogRouter.get('/:id',
 
 //POST
 blogRouter.post('/', 
-  tokenExtractor, 
+  authCOR.authCOR,
   blogParser, 
   blogController.createBlog)
 
@@ -33,7 +34,7 @@ blogRouter.put('/:id',
 
 //DELETE
 blogRouter.delete('/:id', 
-  tokenExtractor, 
+  authCOR.authCOR,
   searchByIdMiddleware, 
   blogController.deleteBlog)
 

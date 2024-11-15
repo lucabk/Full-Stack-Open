@@ -4,7 +4,6 @@ import { ErrorMsg, factory } from "../utils/errorFactory";
 import { blogStatus, newReadingListEntry, ReadingListQuery } from "../utils/type";
 import { readingListParser, updateListParser } from "./zodInput_middleware"
 import { NextFunction, Request, Response } from 'express';
-import { tokenExtractor } from "./jwt_md";
 import { JwtPayload } from "jsonwebtoken";
 
 const checkUserId = async (req:Request<unknown, unknown, newReadingListEntry>, _res:Response, next:NextFunction) => {
@@ -140,7 +139,6 @@ export const readingListCOR = [
 ]
 
 export const updateListCOR = [
-    tokenExtractor,
     updateListParser,
     searchReadingListById,
     getUserById,

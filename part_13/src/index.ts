@@ -12,7 +12,7 @@ import { errorMiddleware } from './middleware/errors_middleware';
 import { unknownEndpoint } from './middleware/unknown_endpoint_mid';
 import morgan from 'morgan';
 import cors from 'cors'
-import sessioneMiddleware from './utils/session';
+import sessionMiddleware from './utils/session';
 
 //  @typescript-eslint/no-unsafe-member-access
 morgan.token('body', (req: express.Request) => JSON.stringify(req.body))
@@ -24,7 +24,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 app.use(express.json())
 
 /*****session configuration******/
-app.use(sessioneMiddleware)
+app.use(sessionMiddleware)
 
 /*********routes*****************/
 app.use('/api/authors', authorRouter)

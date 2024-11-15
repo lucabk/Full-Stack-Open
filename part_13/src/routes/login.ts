@@ -42,6 +42,7 @@ loginRouter.post('/', userUpdateParser, async (req: Request<unknown, unknown, ne
     does not create a  new db entry for the same cookie, but update the one already saved through the session ID)*/
     req.session.userId = userToAuthenticate.id
     req.session.token = token
+    console.log('New user session saved!')
 
     //server response
     res.json({token, username})

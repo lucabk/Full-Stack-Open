@@ -1,6 +1,7 @@
 import express from "express"
 import * as COR from "../middleware/reading_list_mid"
 import * as readingListController from '../controllers/reading_listController'
+import * as authCOR from '../middleware/auth_middleware'
 
 const listRouter = express.Router()
 
@@ -12,6 +13,7 @@ listRouter.post('/',
 
 //set a blog as read
 listRouter.put('/:id',
+    authCOR.authCOR,
     COR.updateListCOR,
     readingListController.updateReadingList
 )
