@@ -34,7 +34,8 @@ Membership.init(
             references: {
                 model:'blogs',
                 key:'id'
-            }        
+            },
+            onDelete: 'CASCADE'        
         }
     },
     {

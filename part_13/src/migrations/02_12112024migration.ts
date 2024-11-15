@@ -49,7 +49,8 @@ module.exports = {
             references: {
                 model:'readingLists',
                 key:'id'
-            }
+            },
+            onDelete: 'CASCADE', 
         },
         blogId: {
             type: DataTypes.INTEGER,
@@ -57,7 +58,8 @@ module.exports = {
             references: {
                 model:'blogs',
                 key:'id'
-            }        
+            },
+            onDelete: 'CASCADE',        
         },
         createdAt: {
             type: DataTypes.DATE,

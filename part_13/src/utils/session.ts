@@ -13,8 +13,6 @@ const sessionStore = new SequelizeStore({
   //expiration: 2 * 60 * 1000,             // The maximum age in ms of a valid session (2 minutes) [server side] (if cookie is set the value of expiration is taken from there)
 });
 
-// Sync the session table
-sessionStore.sync();
 
 // middleware session configuration
 const sessionMiddleware = session({
