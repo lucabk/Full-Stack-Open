@@ -8,6 +8,7 @@ import userRouter from './routes/user';
 import loginRouter from './routes/login';
 import authorRouter from './routes/author';
 import listRouter from './routes/reading_list';
+import logoutRouter from './routes/logout';
 import { errorMiddleware } from './middleware/errors_middleware';
 import { unknownEndpoint } from './middleware/unknown_endpoint_mid';
 import morgan from 'morgan';
@@ -32,6 +33,7 @@ app.use('/api/blogs', blogRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)  
 app.use('/api/readinglists', listRouter)
+app.use('/api/logout', logoutRouter)
 app.use(unknownEndpoint)
 app.use(errorMiddleware)
 
