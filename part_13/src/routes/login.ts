@@ -34,9 +34,17 @@ loginRouter.post('/', userUpdateParser, async (req: Request<unknown, unknown, ne
     Once the token expires, the client app needs to get a new token. Usually, this happens by forcing the user to re-login to the app*/
     const token = jwt.sign(
         userForToken,
-        KEY                                         //,{ expiresIn: 60*60 }
+        KEY,                                       
+        { expiresIn: 60*60 }  //1 hour
     )
-    res.send({token, username})
+
+    /*Save session (the cookie in Postman is automatically saved and sent with the login request, so express-session
+    does not create a  new db entry for the same cookie, but update the one already saved through the session ID)*/
+    req.session.userId = userToAuthenticate.id
+    req.session.token = token
+
+    //server response
+    res.json({token, username})
     console.log('TOKEN sent')
 })
 

@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import { DATABASE_URL } from "./config";
 import { Umzug, SequelizeStorage } from "umzug";
 
+//SINGLETON
 class Database {
   private static instance: Sequelize;
 
@@ -53,6 +54,7 @@ const runSeeds = async () => {
   });
 }
 
+//connection to db w\ seed and migration included
 export const connectToDatabase = async () => {
     try {
       await sequelize.authenticate()
