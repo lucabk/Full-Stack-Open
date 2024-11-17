@@ -29,10 +29,13 @@ The repository is organized into the following parts, each corresponding to diff
 - **part4: Testing Express servers, user administration**
   - **blog list**: In this part, we focus on building a backend for a blog list application using Express and MongoDB. Key topics include creating RESTful APIs, implementing user authentication with JWT, using Mongoose for database handling, and writing unit and integration tests for the backend with Supertest. Additionally, middleware functions are introduced for handling token extraction, user authentication, and error handling.
 
+- **part5: Testing React apps** (in progess..)
+  - **blog list**: In this part, we focus on creating a frontend for the blog list application developed with TypeScript and Sequelize in Part13.
+
 - **part9: TypeScript** (in progess..)
   - **bmi**: first steps with TS.
   - **Patientor**: A full-stack project integrating TypeScript in both frontend (React) and backend (Node.js and Express environment).
   - **patientor-frontend**: https://github.com/lucabk/patientor-frontend 
 
-- **part_13: Using relational databases** (in progress...)
+- **part_13: Using relational databases**
   - Development of the blog list app backend with Express, Typescript, Docker, JWT and Sequelize
