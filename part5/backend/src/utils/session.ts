@@ -20,7 +20,7 @@ const sessionMiddleware = session({
   secret: COOKIES_KEY,                       // Secret key for signing session cookies
   resave: false,                             // Do not save session if unmodified
   saveUninitialized: false,                  // Do not create session until something is stored
-  cookie: { maxAge: 2 * 60 * 1000 }          // Set cookie expiration in ms [client side]
+  cookie: { maxAge: 20 * 60 * 1000 }         // Set cookie expiration in ms [client side]
 })
 
 export default sessionMiddleware

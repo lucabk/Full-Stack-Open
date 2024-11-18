@@ -45,7 +45,7 @@ loginRouter.post('/', userUpdateParser, async (req: Request<unknown, unknown, ne
     console.log('New user session saved!')
 
     //server response
-    res.json({token, username})
+    res.json({token, username, name:userToAuthenticate.name})
     console.log('TOKEN sent')
 })
 
