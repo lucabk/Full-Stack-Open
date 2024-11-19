@@ -18,6 +18,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  const [blogFormVisible, setBlogFormVisible] = useState(false)
+
   //postgreSQL
   useEffect(() => {
     //GET all blogs
@@ -108,6 +110,8 @@ const App = () => {
       setUrl('')
       //notification success 
       setNotification({ msg:`a new blog '${blogAdded.title}' by ${blogAdded.author} added`, type:'success' })
+      //hide Blog Form
+      setBlogFormVisible(false)
       setTimeout(() => {
         setNotification({ msg:null, type:'error'})
       }, 5000)
@@ -142,16 +146,27 @@ const App = () => {
           <h2>blogs</h2>
           {user.name} logged in 
           <button onClick={handleLogout}>logout</button>
-          <h2>create new</h2>
-          <BlogForm  
-            handleAddBlog={handleAddBlog}
-            title={title}
-            setTitle={setTitle}
-            author={author}
-            setAuthor={setAuthor}
-            url={url}
-            setUrl={setUrl}
-          />
+          
+          {blogFormVisible === false ? (
+            <div>
+              <br></br><button onClick={() => setBlogFormVisible(true)}>new blog</button>
+            </div>
+          ) : (
+            <>
+            <h2>create new</h2>
+            <BlogForm  
+              handleAddBlog={handleAddBlog}
+              title={title}
+              setTitle={setTitle}
+              author={author}
+              setAuthor={setAuthor}
+              url={url}
+              setUrl={setUrl}
+            />
+            <button onClick={() => setBlogFormVisible(false)}>cancel</button>
+            </>
+          )}
+
           {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
         </>
       )}
