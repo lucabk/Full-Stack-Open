@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const baseUrl = '/api/blogs'    //base blog URL
-let token = null                //JWTtoken
+const baseUrl = '/api/blogs'           //base blog URL
+export let token = null                //JWTtoken
 
 // set new token 
 export const setToken = (newToken) => {
