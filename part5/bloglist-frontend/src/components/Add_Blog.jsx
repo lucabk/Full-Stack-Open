@@ -4,7 +4,7 @@ const BlogForm = ({ handleAddBlog, title, setTitle, author, setAuthor, url, setU
             title: <input required value={title} onChange={({target}) => setTitle(target.value)}/>
         </div>
         <div>
-            author: <input value={author} onChange={({target}) => setAuthor(target.value)}/>
+            author: <input required value={author} onChange={({target}) => setAuthor(target.value)}/>
         </div>
         <div>
             url: <input required type="url" value={url} onChange={({target}) => setUrl(target.value)}/>

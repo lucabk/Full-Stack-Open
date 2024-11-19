@@ -12,7 +12,7 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState({ msg:null, type:'error'})
   
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -58,10 +58,11 @@ const App = () => {
       setPassword('')
       console.log(`${user.username} logged in`)
     }catch(err){
-      //notifification error
-      setErrorMessage('Wrong credentials')
+      console.error(err)
+      //notification error
+      setNotification({ msg: 'Wrong credentials' })
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification({ msg:null, type:'error' })
       }, 5000)
     }
   }
@@ -105,12 +106,18 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
+      //notification success 
+      setNotification({ msg:`a new blog '${blogAdded.title}' by ${blogAdded.author} added`, type:'success' })
+      setTimeout(() => {
+        setNotification({ msg:null, type:'error'})
+      }, 5000)
+
     }catch(err){
       console.error(err)
-      //notifification error
-      setErrorMessage('Error adding the blog')
+      //notification error
+      setNotification({ msg:'Error adding the blog' })
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification({ msg:null, type:'error'})
       }, 5000)
     }
   }
@@ -120,7 +127,7 @@ const App = () => {
   return (
     <div>
       
-      <Notification message={errorMessage} />
+      <Notification message={notification.msg} type={notification.type} />
       
       {user === null ? (
         <Login 
