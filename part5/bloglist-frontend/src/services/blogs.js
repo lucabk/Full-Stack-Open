@@ -21,3 +21,9 @@ export const addBlog = async (newBlog) => {
   const response = await axios.post(baseUrl, newBlog, config)
   return response.data
 }
+
+//update blog (likes)
+export const addLike = async (blogToUpdate, blogId) => {
+  const config = { headers: { Authorization: token } }
+  return (await axios.put(`${baseUrl}/${blogId}`, blogToUpdate, config)).data
+}

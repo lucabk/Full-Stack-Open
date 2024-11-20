@@ -38,7 +38,7 @@ const Login = ({ setUser, setNotification }) => {
             <div>
                 <h2>Login to application</h2>
                 username:
-                <input
+                <input autoFocus
                     type="text"
                     name="Username"
                     value={username}

@@ -4,7 +4,7 @@ import { blogParser } from '../middleware/zodInput_middleware';
 import { updateParser } from '../middleware/zod_update_mid';
 import blogController from '../controllers/blogController';
 import * as authCOR from '../middleware/auth_middleware'
-import { checkBlogToUpdate, checkOwnerOfBlog } from '../middleware/update_blog_middleware';
+import { checkBlogToUpdate } from '../middleware/update_blog_middleware';
 
 //router
 const blogRouter = express.Router()
@@ -30,7 +30,6 @@ blogRouter.put('/:id',
   authCOR.authCOR,
   searchBlogById, 
   updateParser,
-  checkOwnerOfBlog,
   checkBlogToUpdate,
   blogController.updateBlog)
 

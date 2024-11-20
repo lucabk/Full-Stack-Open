@@ -13,7 +13,7 @@ export type newBlogEntry = z.infer< typeof newEntrySchema >
 
 //ZOD for Blog PUT validation
 export const newLikeSchema = z.object({
-    user : z.number().int().nonnegative(),
+    user : z.string(),
     likes : z.number().int().nonnegative().refine(val => val === 1, {
         message: "Likes must be exactly 1",
     }),

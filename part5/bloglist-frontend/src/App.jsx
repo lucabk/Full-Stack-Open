@@ -58,7 +58,7 @@ const App = () => {
             />
           )}
 
-          {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
+          {blogs.map(blog => <Blog key={blog.id} blog={blog} setNotification={setNotification}/>)}
         </>
       )}
     </div>
