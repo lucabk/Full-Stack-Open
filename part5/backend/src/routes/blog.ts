@@ -1,10 +1,10 @@
 import express from 'express';
-import searchByIdMiddleware from '../middleware/searchById_middleware';
+import searchBlogById from '../middleware/searchById_middleware';
 import { blogParser } from '../middleware/zodInput_middleware';
 import { updateParser } from '../middleware/zod_update_mid';
 import blogController from '../controllers/blogController';
 import * as authCOR from '../middleware/auth_middleware'
-
+import { checkBlogToUpdate, checkOwnerOfBlog } from '../middleware/update_blog_middleware';
 
 //router
 const blogRouter = express.Router()
@@ -14,7 +14,7 @@ blogRouter.get('/',
   blogController.getAllBlogs)
 
 blogRouter.get('/:id', 
-  searchByIdMiddleware, 
+  searchBlogById, 
   blogController.getBlogById)
 
 
@@ -27,15 +27,18 @@ blogRouter.post('/',
 
 //PUT
 blogRouter.put('/:id', 
-  searchByIdMiddleware, 
-  updateParser, 
+  authCOR.authCOR,
+  searchBlogById, 
+  updateParser,
+  checkOwnerOfBlog,
+  checkBlogToUpdate,
   blogController.updateBlog)
 
 
 //DELETE
 blogRouter.delete('/:id', 
   authCOR.authCOR,
-  searchByIdMiddleware, 
+  searchBlogById, 
   blogController.deleteBlog)
 
 export default blogRouter

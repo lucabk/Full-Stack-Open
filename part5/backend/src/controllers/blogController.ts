@@ -54,22 +54,18 @@ const createBlog = async (req: Request<JwtPayload, unknown, newBlogEntry>, res: 
 } 
 
 const updateBlog = async(req: Request<{ id: string }, unknown, newLikeEntry>, res: Response<newBlogEntry>, next:NextFunction) => {
-    if(req.blog === undefined){
-      const error:ErrorMsg = factory.getError(StatusCodes.NOT_FOUND, 'Blog not found')
-      next(error)
-      return;
-    }
-    const id:number = Number(req.params.id)
-    await Blog.update(req.body, {
-      where: {id}
-    })
-    const blogUpdated = await Blog.findByPk(id)
-    if(blogUpdated){
-      res.status(StatusCodes.OK).json(blogUpdated);
-    }else {
-      const error:ErrorMsg = factory.getError(StatusCodes.INTERNAL_SERVER_ERROR, 'Server Error')
-      next(error)
-    }
+  //update blog's likes
+  await Blog.increment({ likes:1 }, { where: { id : req.blog?.id } })
+  
+  //blog updated
+  const blogUpdated = await Blog.findByPk(req.blog?.id)
+  if(blogUpdated){
+    res.status(StatusCodes.OK).json(blogUpdated);
+  }else {
+    const error:ErrorMsg = factory.getError(StatusCodes.INTERNAL_SERVER_ERROR, 'Server Error')
+    next(error)
+    return
+  }
 }
 
 const deleteBlog = async (req:Request, res:Response, next:NextFunction) => {
