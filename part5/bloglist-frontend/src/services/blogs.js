@@ -11,6 +11,7 @@ export const setToken = (newToken) => {
 //get all blogs
 export const getAll = async () => {
   const response = await axios.get(baseUrl)
+  console.log('getAll() res:', response.data)
   return response.data
 }
 

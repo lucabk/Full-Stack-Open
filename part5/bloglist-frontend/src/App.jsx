@@ -48,7 +48,7 @@ const App = () => {
           <Logout setUser={setUser} user={user} />
           
           {blogFormVisible === false ? (
-              <div><br></br><button onClick={() => setBlogFormVisible(true)}>new blog</button></div>
+              <div><br></br><button onClick={() => setBlogFormVisible(true)}>create new blog</button></div>
           ) : (
             <BlogForm 
               setNotification={setNotification} 
