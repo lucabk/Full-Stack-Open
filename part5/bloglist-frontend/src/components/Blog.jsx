@@ -2,8 +2,7 @@ import Togglable from './Togglable'
 import * as blogService from '../services/blogs'
 import { useState } from 'react'
 
-const Blog = ({ blog, setNotification }) => {
-  const [likes, setLikes] = useState(blog.likes)
+const Blog = ({ blog, setNotification, blogs, setBlogs }) => {
 
   //handle add likes to blog
   const handleAddLike = async (event) => {
@@ -19,7 +18,8 @@ const Blog = ({ blog, setNotification }) => {
       //update db
       const blogUpdated = await blogService.addLike(blogToUpdate, blog.id)
       //update frontend
-      setLikes(blogUpdated.likes)
+      const newBlogs = blogs.filter(b => b.id !== blogUpdated.id ? b : b.likes = blogUpdated.likes)
+      setBlogs(newBlogs)
       console.log('blogUpdated:', blogUpdated)
     }catch(err){
       console.error(err)
@@ -45,7 +45,7 @@ const Blog = ({ blog, setNotification }) => {
       {blog.title}, {blog.author}
       <Togglable buttonLabel="view">
         {blog.url}<br></br>
-        likes {likes} <button onClick={handleAddLike}>like</button><br></br>
+        likes {blog.likes} <button onClick={handleAddLike}>like</button><br></br>
         {blog.user.name}
       </Togglable>
     </div>  
