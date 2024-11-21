@@ -2,7 +2,16 @@ import Togglable from './Togglable'
 import * as blogService from '../services/blogs'
 import { useState } from 'react'
 
-const Blog = ({ blog, setNotification, blogs, setBlogs }) => {
+const Blog = ({ blog, setNotification, blogs, setBlogs, nameOfUser }) => {
+  
+  //session expired notification
+  const notification = () => {
+    //notification error
+    setNotification({ msg: 'session expired (maybe)' })
+    setTimeout(() => {
+        setNotification({ msg:null, type:'error' })
+    }, 5000)
+  }
 
   //handle add likes to blog
   const handleAddLike = async (event) => {
@@ -24,10 +33,26 @@ const Blog = ({ blog, setNotification, blogs, setBlogs }) => {
     }catch(err){
       console.error(err)
       //notification error
-      setNotification({ msg: 'session expired (maybe)' })
-      setTimeout(() => {
-          setNotification({ msg:null, type:'error' })
-      }, 5000)
+      notification()
+    }
+  }
+
+  //handle delete blog
+  const handleDeleteBlog = async (event) => {
+    event.preventDefault()
+    if(window.confirm(`Remove ${blog.title} by ${blog.author}?`)){
+      try{
+        //update db
+        await blogService.deletBlog(blog.id)  
+        //update frontend
+        const newBlogs = blogs.filter( b => b.id !== blog.id)
+        setBlogs(newBlogs)
+        console.log('blog deleted!')
+      }catch(err){
+        console.error(err)
+        //notification error
+        notification()
+      }
     }
   }
 
@@ -47,6 +72,9 @@ const Blog = ({ blog, setNotification, blogs, setBlogs }) => {
         {blog.url}<br></br>
         likes {blog.likes} <button onClick={handleAddLike}>like</button><br></br>
         {blog.user.name}
+        { nameOfUser === blog.user.name && (
+          <div><button onClick={handleDeleteBlog}>delete</button></div>
+        )}
       </Togglable>
     </div>  
   )  

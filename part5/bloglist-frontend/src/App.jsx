@@ -58,7 +58,16 @@ const App = () => {
             />
           )}
 
-          {blogs.sort((a, b) => b.likes - a.likes).map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} setNotification={setNotification}/>)}
+          {blogs.sort((a, b) => b.likes - a.likes).map(blog => 
+            <Blog 
+              key={blog.id} 
+              blog={blog} 
+              blogs={blogs} 
+              setBlogs={setBlogs} 
+              setNotification={setNotification}
+              nameOfUser={user.name}
+            />
+            )}
         </>
       )}
     </div>
