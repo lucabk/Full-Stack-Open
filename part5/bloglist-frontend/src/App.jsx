@@ -55,6 +55,7 @@ const App = () => {
               setBlogFormVisible={setBlogFormVisible}
               setBlogs={setBlogs}
               blogs={blogs}
+              user={user}
             />
           )}
 

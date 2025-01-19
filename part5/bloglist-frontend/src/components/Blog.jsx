@@ -3,7 +3,7 @@ import * as blogService from '../services/blogs'
 import { useState } from 'react'
 
 const Blog = ({ blog, setNotification, blogs, setBlogs, nameOfUser }) => {
-  
+  console.log('Blog component blog:', blog)
   //session expired notification
   const notification = () => {
     //notification error
