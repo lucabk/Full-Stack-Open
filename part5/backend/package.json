@@ -6,7 +6,8 @@
     "tsc": "tsc",
     "dev": "ts-node-dev src/index.ts",
     "lint": "eslint .",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "start:test": "NODE_ENV=test node build/index.js"
   },
   "author": "",
   "license": "ISC",

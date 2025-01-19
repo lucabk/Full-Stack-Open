@@ -67,7 +67,7 @@ const Blog = ({ blog, setNotification, blogs, setBlogs, nameOfUser }) => {
 
   return(
     <div style={blogStyle}>
-      {blog.title}, {blog.author}
+      <div className='TitleAuthor'>{blog.title}, {blog.author}</div>
       <Togglable buttonLabel="view">
         {blog.url}<br></br>
         likes {blog.likes} <button onClick={handleAddLike}>like</button><br></br>
