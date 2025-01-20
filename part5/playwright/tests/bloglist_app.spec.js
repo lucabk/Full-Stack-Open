@@ -53,10 +53,20 @@ describe('Blog app', () => {
       const likesBeforeNumber = parseInt(likesBefore.split(' ')[1])
 
       await page.getByRole('button', { name: 'like' }).click()     
-      await page.waitForTimeout(1000)
+      await page.waitForTimeout(100)
       const likesAfter = await page.locator(likes_XPath).innerText()
       const likesAfterNumber = parseInt(likesAfter.split(' ')[1])
       await expect(likesAfterNumber).toBe(likesBeforeNumber + 1)
      })
+
+    test('the user who added the blog can delete the blog.', async ({ page }) => {
+      await page.getByRole('button', { name: 'view' }).click()
+    
+      page.on('dialog', dialog => dialog.accept())
+    
+      await page.getByRole('button', { name: 'delete' }).click()
+      await page.waitForTimeout(100)
+      await expect(page.getByText('testTitle, testAuthor')).not.toBeVisible()     
+    })
   })
 })
