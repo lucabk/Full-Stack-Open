@@ -44,5 +44,19 @@ describe('Blog app', () => {
       await page.waitForSelector('text=testTitle')
       await expect(page.getByText('testTitle, testAuthor')).toBeVisible()
      })
+
+     
+    test('a blog can be liked.', async ({ page }) => {
+      await page.getByRole('button', { name: 'view' }).click()
+      const likes_XPath = '//*[@id="likes"]'
+      const likesBefore = await page.locator(likes_XPath).innerText()
+      const likesBeforeNumber = parseInt(likesBefore.split(' ')[1])
+
+      await page.getByRole('button', { name: 'like' }).click()     
+      await page.waitForTimeout(1000)
+      const likesAfter = await page.locator(likes_XPath).innerText()
+      const likesAfterNumber = parseInt(likesAfter.split(' ')[1])
+      await expect(likesAfterNumber).toBe(likesBeforeNumber + 1)
+     })
   })
 })

@@ -70,7 +70,7 @@ const Blog = ({ blog, setNotification, blogs, setBlogs, nameOfUser }) => {
       <div className='TitleAuthor'>{blog.title}, {blog.author}</div>
       <Togglable buttonLabel="view">
         {blog.url}<br></br>
-        likes {blog.likes} <button onClick={handleAddLike}>like</button><br></br>
+        <div id='likes'>likes {blog.likes}</div> <button onClick={handleAddLike}>like</button><br></br>
         {blog.user.name}
         { nameOfUser === blog.user.name && (
           <div><button onClick={handleDeleteBlog}>delete</button></div>
