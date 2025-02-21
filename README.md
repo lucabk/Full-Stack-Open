@@ -29,8 +29,12 @@ The repository is organized into the following parts, each corresponding to diff
 - **part4: Testing Express servers, user administration**
   - **blog list**: In this part, we focus on building a backend for a blog list application using Express and MongoDB. Key topics include creating RESTful APIs, implementing user authentication with JWT, using Mongoose for database handling, and writing unit and integration tests for the backend with Supertest. Additionally, middleware functions are introduced for handling token extraction, user authentication, and error handling.
 
-- **part5: Testing React apps** (in progess..)
+- **part5: Testing React apps** 
   - **blog list**: In this part, we focus on creating a frontend for the blog list application developed with TypeScript and Sequelize in Part13.
+
+- **part6: Advanced state management** (in progess..)
+  - **unicafe**: A simplified version of the unicafe exercise from part 1 with Redux.
+  - **anecdote**: New version of the anecdote voting application from part 1 with Redux.
 
 - **part9: TypeScript** (in progess..)
   - **bmi**: first steps with TS.
