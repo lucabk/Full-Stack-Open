@@ -2,16 +2,19 @@ import { useSelector, useDispatch } from 'react-redux'
 import { addVote } from '../reducers/anecdoteReducer'
 
 const AnecdoteList = () => {
+    // Get anecdotes and filter them based on the current filter value
     const a = useSelector(({anectodes, filter}) => {
         if (filter===""){
             return anectodes
         }
         return anectodes.filter( a => a.content.includes(filter))
     })
+    
+    // Get the dispatch function from the Redux store
     const dispatch = useDispatch()
   
     const vote = (id) => {
-      //dispatch action creatore "addVote"
+      //dispatch action creator "addVote"
       dispatch(addVote(id))
     }
   
