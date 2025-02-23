@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux'
 
 const Notification = () => {
-  //state
-  const notification = useSelector(({ filter }) => {
-    if(filter!==""){
-      return filter
+  //get notification state
+  const notification = useSelector(({ notification }) => {
+    if(notification){
+      return notification
     }
   })
   //CSS
@@ -15,9 +15,13 @@ const Notification = () => {
   }
 
   return (
-    <div style={style}>
-      {notification}
-    </div>
+    <>
+      {notification && notification.length > 1 && (
+        <div style={style}>
+          {notification}
+        </div>
+      )}
+    </>
   )
 }
 
