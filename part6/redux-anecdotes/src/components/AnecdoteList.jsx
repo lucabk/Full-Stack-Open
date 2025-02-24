@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { modifyAnecdote } from '../reducers/anecdoteReducer'
-import { showNotification, hideNotification } from '../reducers/notificationReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
     // Get anecdotes and filter them based on the current filter value
@@ -21,13 +21,8 @@ const AnecdoteList = () => {
         //dispatch action "addVote"
         dispatch(modifyAnecdote(anecdote))
 
-        // 5 sec notification
-        // Dispatch the "showNotification" action with the input value
-        dispatch(showNotification("you voted "+ a.find( a => a.id === id ).content))
-        setTimeout(() => {
-            // Dispatch the "hideNotification" action after 5 seconds
-            dispatch(hideNotification(""))
-        }, 5000)
+        //notification
+        dispatch(setNotification("you voted "+ a.find( a => a.id === id ).content))
     }
   
     // Sort anecdotes by votes in descending order
