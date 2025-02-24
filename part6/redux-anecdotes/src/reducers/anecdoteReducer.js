@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import * as service from "../services/anecdotes"
 
 const anecdoteSlice = createSlice({
   name: 'anecdote',
@@ -25,6 +26,14 @@ const anecdoteSlice = createSlice({
     }
   }
 })
+
+//With Redux Thunk it is possible to implement action creators which return a function instead of an object. 
+export const initializeAnectodes = () => {
+  return async dispatch => {
+    const data = await service.getAll()
+    dispatch(setAnectodes(data))
+  }
+}
 
 export const {addAnecdote, addVote, setAnectodes} = anecdoteSlice.actions
 export default anecdoteSlice.reducer

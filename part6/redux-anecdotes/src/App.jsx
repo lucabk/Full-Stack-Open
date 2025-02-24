@@ -2,20 +2,16 @@ import AddAnectode from "./components/AnecdoteForm"
 import AnecdoteList from "./components/AnecdoteList"
 import Filter from "./components/Filter"
 import Notification from "./components/Notification"
-import * as service from "./services/anecdotes"
 import { useEffect } from "react"
 import { useDispatch } from "react-redux"
-import { setAnectodes } from "./reducers/anecdoteReducer"
+import { initializeAnectodes } from "./reducers/anecdoteReducer"
 
 const App = () => {
   const dispatch = useDispatch()
 
   useEffect(()=> {
-    service.getAll().then(res => {
-      console.log("anectodes GET from json server and store updated")
-      dispatch(setAnectodes(res))
-    })
-
+    dispatch(initializeAnectodes())
+    console.log("anectodes GET from json server and store updated")
   }, [])
 
   return (
