@@ -41,6 +41,15 @@ export const createAnecdote = (content) => {
     dispatch(addAnecdote(data))
   } 
 }
+export const modifyAnecdote = (anecdote) => {
+   return async (dispatch) => {
+    //server
+    const newAnecdote = {...anecdote, votes:anecdote.votes+1}
+    const data = await service.addVote(anecdote.id, newAnecdote)
+    //internal state
+    dispatch(addVote(data.id))
+   }
+}
 
 
 export const {addAnecdote, addVote, setAnectodes} = anecdoteSlice.actions
