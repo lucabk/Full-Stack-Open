@@ -1,10 +1,9 @@
 import { addNew } from "../requests"
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
+import PropTypes from 'prop-types'
 
 
-const AnecdoteForm = () => {
-  // Initialize the query client
-  const queryClient = useQueryClient()
+const AnecdoteForm = ({ queryClient }) => {
 
   // Mutation hook to add a new anecdote
   const newAnecdoteMutation = useMutation({
@@ -33,6 +32,9 @@ const AnecdoteForm = () => {
       </form>
     </div>
   )
+}
+AnecdoteForm.propTypes = {
+  queryClient: PropTypes.object.isRequired,
 }
 
 export default AnecdoteForm
