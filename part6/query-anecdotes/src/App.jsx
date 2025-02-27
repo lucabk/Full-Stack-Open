@@ -1,7 +1,7 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
+import { getAll } from './requests'
 
 const App = () => {
 
@@ -12,7 +12,7 @@ const App = () => {
   // Fetch anecdotes using react-query
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['anecdotes'],
-    queryFn: ()=>axios.get("http://localhost:3001/anecdotes/").then(res => res.data)
+    queryFn: getAll
   })   
 
   // Show loading message while fetching data
