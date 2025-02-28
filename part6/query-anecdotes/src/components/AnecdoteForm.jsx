@@ -1,9 +1,12 @@
 import { addNew } from "../requests"
 import { useMutation } from '@tanstack/react-query'
 import PropTypes from 'prop-types'
-
+import { useContext } from "react"
+import NotificationContext from "../notificationContext"
 
 const AnecdoteForm = ({ queryClient }) => {
+  // Get the notification context
+  const [notification, notificationDispatcher] = useContext(NotificationContext)
 
   // Mutation hook to add a new anecdote
   const newAnecdoteMutation = useMutation({
@@ -21,6 +24,13 @@ const AnecdoteForm = ({ queryClient }) => {
     event.target.anecdote.value = ''
     // Use the mutation to add a new anecdote with initial votes set to 0
     newAnecdoteMutation.mutate({ content, votes: 0 })
+    // Show a notification when a new anecdote is added
+    notificationDispatcher({ type:"SHOW_NOTIFICATION", payload:"you added "+content})
+    setTimeout(() => {
+        // Dispatch the "hideNotification" action after 5 seconds
+        notificationDispatcher({ type:"HIDE_NOTIFICATION" })
+    }, 5000)
+
 }
 
   return (

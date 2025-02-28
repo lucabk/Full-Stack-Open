@@ -2,8 +2,12 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useMutation, useQuery,useQueryClient } from '@tanstack/react-query'
 import { getAll, addVote } from './requests'
+import { useContext } from 'react'
+import NotificationContext from './notificationContext'
 
 const App = () => {
+  // Get the notification context
+  const [notification, notificationDispatcher] = useContext(NotificationContext)
   // Initialize the query client
   const queryClient = useQueryClient()
 
@@ -19,7 +23,14 @@ const App = () => {
   //handle add vote
   const handleVote = (anecdote) => {
     console.log("voted")
+    // Increment the vote count for the selected anecdote
     addVoteMutation.mutate({ ...anecdote, votes:anecdote.votes+1 })
+    // Show a notification when a new anecdote is voted
+    notificationDispatcher({ type:"SHOW_NOTIFICATION", payload:"anecdote '"+anecdote.content+"' voted"})
+    setTimeout(() => {
+        // Dispatch the "hideNotification" action after 5 seconds
+        notificationDispatcher({ type:"HIDE_NOTIFICATION" })
+    }, 5000)
   }
 
   // Fetch anecdotes using react-query
