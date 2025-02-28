@@ -14,6 +14,14 @@ const AnecdoteForm = ({ queryClient }) => {
     onSuccess: () => {
       // Invalidate the 'anecdotes' query to refetch the data after a new anecdote is added
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
+    },
+    onError: () => {
+      // Show a notification when there is an error adding a new anecdote
+      notificationDispatcher({ type:"SHOW_NOTIFICATION", payload:"anecdote must be at leat 5 char long"})
+      setTimeout(() => {
+          // Dispatch the "hideNotification" action after 5 seconds
+          notificationDispatcher({ type:"HIDE_NOTIFICATION" })
+      }, 5000)
     }
   })
 
