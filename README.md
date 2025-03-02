@@ -32,9 +32,13 @@ The repository is organized into the following parts, each corresponding to diff
 - **part5: Testing React apps** 
   - **blog list**: In this part, we focus on creating a frontend for the blog list application developed with TypeScript and Sequelize in Part13.
 
-- **part6: Advanced state management** (in progess..)
+- **part6: Advanced state management** 
   - **unicafe**: A simplified version of the unicafe exercise from part 1 with Redux.
   - **anecdote**: New version of the anecdote voting application from part 1 with Redux.
+  - **anecdote**: React Query and Context.
+
+- **part7: React router, custom hooks, styling app with CSS and webpack** (in progess..)
+  - **anecdote**: New version of the anecdote voting application with React Router.
 
 - **part9: TypeScript** (in progess..)
   - **bmi**: first steps with TS.
