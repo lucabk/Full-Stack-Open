@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react'
 import {
+  useMatch,
   BrowserRouter as Router,
   Routes, Route, Link
 } from 'react-router-dom'
@@ -24,10 +25,24 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote => 
+        <li key={anecdote.id} >
+            <Link to={`/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
+      )}
     </ul>
   </div>
 )
+
+const Anecdote = ({ anecdote }) => {
+  return(
+    <>
+      <h2>{anecdote.content} by {anecdote.author}</h2>
+      <p>has {anecdote.votes} votes</p>
+      <p>for more see this link: <a href={anecdote.info} target="_blank" rel="noreferrer">{anecdote.info}</a></p>
+    </>
+  )
+}
 
 const About = () => (
   <div>
@@ -110,6 +125,11 @@ const App = () => {
 
   const [notification, setNotification] = useState('')
 
+  const match = useMatch('/:id');
+  const anecdote = match ?
+    anecdotes.find(a => a.id === Number(match.params.id)) :
+    null
+
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
@@ -135,6 +155,7 @@ const App = () => {
       <Menu />
 
       <Routes>
+        <Route path='/:id' element={<Anecdote anecdote={anecdote} />}/>
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/about' element={<About />} />
         <Route path='/new' element={<CreateNew addNew={addNew} />} />
