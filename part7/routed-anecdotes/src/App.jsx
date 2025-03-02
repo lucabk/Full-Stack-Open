@@ -107,6 +107,7 @@ const CreateNew = (props) => {
         </div>
         <button>create</button>
       </form>
+        <button onClick={content.reset }>reset</button>
     </div>
   )
 }
