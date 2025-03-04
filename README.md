@@ -39,6 +39,7 @@ The repository is organized into the following parts, each corresponding to diff
 
 - **part7: React router, custom hooks, styling app with CSS and webpack** (in progess..)
   - **anecdote**: New version of the anecdote voting application with React Router.
+  - **blog list**: New version of the application with Redux, React Router, comments and styling.
 
 - **part9: TypeScript** (in progess..)
   - **bmi**: first steps with TS.

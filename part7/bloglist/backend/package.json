@@ -1,0 +1,49 @@
+{
+  "name": "part_13",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "dev": "ts-node-dev src/index.ts",
+    "lint": "eslint .",
+    "start": "node build/index.js",
+    "start:test": "NODE_ENV=test node build/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.12.0",
+    "@stylistic/eslint-plugin": "^2.9.0",
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^6.1.1",
+    "@types/eslint__js": "^8.42.3",
+    "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/morgan": "^1.9.9",
+    "@types/pg": "^8.11.10",
+    "@types/sequelize": "^4.28.20",
+    "eslint": "^9.12.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.8.1"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "connect-session-sequelize": "^7.1.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-async-errors": "^3.1.1",
+    "express-session": "^1.18.1",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.13.1",
+    "sequelize": "^6.37.4",
+    "umzug": "^3.8.2",
+    "zod": "^3.23.8"
+  }
+}
