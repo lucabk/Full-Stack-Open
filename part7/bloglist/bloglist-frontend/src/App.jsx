@@ -5,23 +5,17 @@ import Login from './components/Login'
 import Logout from './components/Logout'
 import Notification from './components/Notifications'
 import * as blogService from './services/blogs'
-
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useContext } from 'react'
+import NotificationContext from './context/notificationContext'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
- // const [notification, setNotification] = useState({ msg:null, type:'error'})
   const [blogFormVisible, setBlogFormVisible] = useState(false)
-
-  //postgreSQL
-  useEffect(() => {
-    //GET all blogs
-    const fetchAllBlogs = async () => {
-      const allBlogs = await blogService.getAll()
-      setBlogs(allBlogs)
-    }
-    fetchAllBlogs()
-  }, [])
+  const [notification, notificationDispatcher] = useContext(NotificationContext)
+  // Initialize the query client
+  const queryClient = useQueryClient()
 
   //browser local storage
   useEffect(() => {
@@ -35,6 +29,26 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+
+  // Fetch blogs data using react-query
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll
+  })
+  // Handle loading and error states
+  if (isPending) {
+    return <span>Loading blogs...</span>
+  }
+  if (isError) {
+    notificationDispatcher({
+      type: 'SHOW_NOTIFICATION',
+      payload: {
+        msg: error.message,
+        type: 'error'
+      }
+    })
+  }
 
 
   //conditional rendering on login and blogs based on 'user' state
@@ -53,13 +67,12 @@ const App = () => {
           ) : (
             <BlogForm 
               setBlogFormVisible={setBlogFormVisible}
-              setBlogs={setBlogs}
-              blogs={blogs}
               user={user}
+              queryClient={queryClient}
             />
           )}
 
-          {blogs.sort((a, b) => b.likes - a.likes).map(blog => 
+          {data.sort((a, b) => b.likes - a.likes).map(blog => 
             <Blog 
               key={blog.id} 
               blog={blog} 

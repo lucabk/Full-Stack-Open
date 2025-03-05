@@ -2,34 +2,20 @@ import { useState } from 'react'
 import * as blogService from '../services/blogs'
 import { useContext } from 'react'
 import NotificationContext from '../context/notificationContext'
+import { useMutation } from '@tanstack/react-query'
 
-const BlogForm = ({ setBlogFormVisible, setBlogs, user,blogs }) => {
+const BlogForm = ({ setBlogFormVisible, user, queryClient }) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
     const [notification, notificationDispatcher] = useContext(NotificationContext)
 
-    //add blog event handler
-    const handleAddBlog = async (event) => {
-        event.preventDefault()
-        //new blog to add
-        const newBlog = {
-            author,
-            url,
-            title
-        }
-        try{
-            //add blog
-            const blogAdded = await blogService.addBlog(newBlog) //res = {id, author, url, title, likes, userId, year}
-            //update the state of the App component to render the new blog
-            setBlogs(blogs.concat(blogAdded))
-            //adding user logged in
-            blogAdded.user = user
-            console.log('added blog', blogAdded)
-            //clear blog form
-            setTitle('')
-            setAuthor('')
-            setUrl('')
+    // Mutation for adding a new blog
+    const newBlogMutation = useMutation({
+        mutationFn: blogService.addBlog,
+        onSuccess: (blogAdded) => {
+            const blogs = queryClient.getQueryData(['blogs'])
+            queryClient.setQueryData(['blogs'], blogs.concat(blogAdded))
             //notification success 
             notificationDispatcher({ 
                 type:'SHOW_NOTIFICATION', 
@@ -44,15 +30,22 @@ const BlogForm = ({ setBlogFormVisible, setBlogs, user,blogs }) => {
             setTimeout(() => {
                 notificationDispatcher({ type:'HIDE_NOTIFICATION' })
             }, 5000)
-
-        }catch(err){
-            console.error(err)
-            //notification error
+            //adding user logged in
+            blogAdded.user = user
+            console.log('added blog', blogAdded)
+            //clear blog form
+            setTitle('')
+            setAuthor('')
+            setUrl('')
+        },
+        onError: (error) => {
+            console.error('POST blog error:',error.message)
+            // Show error notification if the mutation fails
             notificationDispatcher({ 
                 type:'SHOW_NOTIFICATION', 
                 payload: 
                     {
-                        msg: 'Error adding the blog', 
+                        msg: error.response.data.error, 
                         type:'error' 
                     }
                 })
@@ -60,6 +53,19 @@ const BlogForm = ({ setBlogFormVisible, setBlogs, user,blogs }) => {
                 notificationDispatcher({ type:'HIDE_NOTIFICATION' })
             }, 5000)
         }
+    })
+
+    //add blog event handler
+    const handleAddBlog = async (event) => {
+        event.preventDefault()
+        //new blog to add
+        const newBlog = {
+            author,
+            url,
+            title
+        }
+        //mutate
+        newBlogMutation.mutate(newBlog)
     }
 
     return(
