@@ -29,7 +29,7 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
+  
 
   // Fetch blogs data using react-query
   const { isPending, isError, data, error } = useQuery({
@@ -75,10 +75,9 @@ const App = () => {
           {data.sort((a, b) => b.likes - a.likes).map(blog => 
             <Blog 
               key={blog.id} 
-              blog={blog} 
-              blogs={blogs} 
-              setBlogs={setBlogs} 
+              blog={blog}
               nameOfUser={user.name}
+              queryClient={queryClient}
             />
             )}
         </>

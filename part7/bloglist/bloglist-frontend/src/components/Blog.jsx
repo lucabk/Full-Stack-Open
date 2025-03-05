@@ -1,61 +1,78 @@
 import Togglable from './Togglable'
 import * as blogService from '../services/blogs'
-import { useState } from 'react'
 import { useContext } from 'react'
 import NotificationContext from '../context/notificationContext'
+import { useMutation } from '@tanstack/react-query'
 
-const Blog = ({ blog, blogs, setBlogs, nameOfUser }) => {
+const Blog = ({ queryClient, nameOfUser, blog }) => {
   const [notificationValue, notificationValueDispatcher] = useContext(NotificationContext)
   
-  //session expired notification
-  const notification = () => {
-    //notification error
-    notificationValueDispatcher({ type:'SHOW_NOTIFICATION', payload: {msg: 'session expired', type:'error' }})
+  const updateBlogMutation = useMutation({
+    mutationFn: ({ blogToUpdate, blogId }) => blogService.addLike(blogToUpdate, blogId),
+    onSuccess : (blogUpdated) => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      const newBlogs = blogs.filter(b => b.id !== blogUpdated.id ? b : b.likes = blogUpdated.likes)
+      queryClient.setQueryData(['blogs'], newBlogs)
+      console.log('blogUpdated:', blogUpdated)
+    },
+    onError : (error) => {
+      console.error('add like blog error:',error.message)
+      errorNotification(error.message)
+    }
+  })
+
+  const deleteBlogMutation = useMutation({
+    mutationFn: blogService.deletBlog,
+    onSuccess : () => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      const newBlogs = blogs.filter( b => b.id !== blog.id)
+      queryClient.setQueryData(['blogs'], newBlogs)
+      console.log('blog removed')
+    },
+    onError : (error) => {
+      errorNotification(error.message)
+    }
+  })
+  
+  const errorNotification = (error) => {
+    // Show error notification if the mutation fails
+    notificationValueDispatcher({ 
+      type:'SHOW_NOTIFICATION', 
+      payload: 
+          {
+              msg: error, 
+              type:'error' 
+          }
+      })
     setTimeout(() => {
-        notificationValueDispatcher({ type:'HIDE_NOTIFIATION' })
+        notificationValueDispatcher({ type:'HIDE_NOTIFICATION' })
     }, 5000)
   }
+
 
   //handle add likes to blog
   const handleAddLike = async (event) => {
     event.preventDefault()
-    try{
-      const blogToUpdate = {
-        user:blog.user.name,
-        likes:1,
-        author:blog.author,
-        title:blog.title,
-        url:blog.url
-      }
-      //update db
-      const blogUpdated = await blogService.addLike(blogToUpdate, blog.id)
-      //update frontend
-      const newBlogs = blogs.filter(b => b.id !== blogUpdated.id ? b : b.likes = blogUpdated.likes)
-      setBlogs(newBlogs)
-      console.log('blogUpdated:', blogUpdated)
-    }catch(err){
-      console.error(err)
-      //notification error
-      notification()
+    const blogToUpdate = {
+      user:blog.user.name,
+      likes:1,
+      author:blog.author,
+      title:blog.title,
+      url:blog.url
     }
+    //add like mutation
+    updateBlogMutation.mutate({
+      blogToUpdate,
+      blogId: blog.id
+    })
   }
 
   //handle delete blog
   const handleDeleteBlog = async (event) => {
     event.preventDefault()
     if(window.confirm(`Remove ${blog.title} by ${blog.author}?`)){
-      try{
-        //update db
-        await blogService.deletBlog(blog.id)  
-        //update frontend
-        const newBlogs = blogs.filter( b => b.id !== blog.id)
-        setBlogs(newBlogs)
-        console.log('blog deleted!')
-      }catch(err){
-        console.error(err)
-        //notification error
-        notification()
-      }
+      //delete blog mutation
+      deleteBlogMutation.mutate(blog.id)
     }
   }
 
