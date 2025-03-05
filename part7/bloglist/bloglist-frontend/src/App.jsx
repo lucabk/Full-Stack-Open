@@ -8,14 +8,16 @@ import * as blogService from './services/blogs'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useContext } from 'react'
 import NotificationContext from './context/notificationContext'
+import UserContext from './context/userContext'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
+//  const [user, setUser] = useState(null)
   const [blogFormVisible, setBlogFormVisible] = useState(false)
   const [notification, notificationDispatcher] = useContext(NotificationContext)
+  const [user, userDispatcher] = useContext(UserContext)
   // Initialize the query client
   const queryClient = useQueryClient()
+
 
   //browser local storage
   useEffect(() => {
@@ -23,10 +25,10 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('userlogged')
     //if they are there, the details are saved to the state of the application and to blogService
     if (loggedUserJSON){
-      const user = JSON.parse(loggedUserJSON)
+      const userInfo = JSON.parse(loggedUserJSON)
       //set user state and token value
-      setUser(user)
-      blogService.setToken(user.token)
+      userDispatcher({ type: 'SAVE_USER', payload: userInfo})
+      blogService.setToken(userInfo.token)
     }
   }, [])
   
@@ -57,17 +59,16 @@ const App = () => {
       <Notification />
       
       {user === null ? (
-        <Login setUser={setUser} />
+        <Login />
       ) : (
         <>
-          <Logout setUser={setUser} user={user} />
+          <Logout />
           
           {blogFormVisible === false ? (
               <div><br></br><button onClick={() => setBlogFormVisible(true)}>create new blog</button></div>
           ) : (
             <BlogForm 
               setBlogFormVisible={setBlogFormVisible}
-              user={user}
               queryClient={queryClient}
             />
           )}

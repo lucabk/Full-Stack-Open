@@ -1,7 +1,11 @@
 import * as authService from '../services/authentication'
 import * as blogService from '../services/blogs'
+import UserContext from '../context/userContext'
+import { useContext } from 'react'
 
-const Logout = ({ setUser, user }) => {
+const Logout = () => {
+    const [user, userDispatcher] = useContext(UserContext)
+
     //Logout event handler
     const handleLogout = async (event) => {
         event.preventDefault()
@@ -17,7 +21,7 @@ const Logout = ({ setUser, user }) => {
             //set token to null
             blogService.setToken(null)
             //delete user state
-            setUser(null)
+            userDispatcher({ type: 'DELETE_USER'})
         }
     }
 

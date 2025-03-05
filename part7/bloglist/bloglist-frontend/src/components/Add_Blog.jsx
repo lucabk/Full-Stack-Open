@@ -3,12 +3,15 @@ import * as blogService from '../services/blogs'
 import { useContext } from 'react'
 import NotificationContext from '../context/notificationContext'
 import { useMutation } from '@tanstack/react-query'
+import UserContext from '../context/userContext'
 
-const BlogForm = ({ setBlogFormVisible, user, queryClient }) => {
+const BlogForm = ({ setBlogFormVisible, queryClient }) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
     const [notification, notificationDispatcher] = useContext(NotificationContext)
+    const [user] = useContext(UserContext)
+
 
     // Mutation for adding a new blog
     const newBlogMutation = useMutation({

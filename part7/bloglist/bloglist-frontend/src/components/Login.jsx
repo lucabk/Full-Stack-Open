@@ -3,11 +3,13 @@ import * as authService from '../services/authentication'
 import * as blogService from '../services/blogs'
 import { useContext } from 'react'
 import NotificationContext from '../context/notificationContext'
+import UserContext from '../context/userContext'
 
-const Login = ({ setUser }) => {
+const Login = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [notification, notificationDispatcher] = useContext(NotificationContext) 
+    const [userStore, userStoreDispatcher] = useContext(UserContext)
 
 
     //Login event handler
@@ -20,7 +22,7 @@ const Login = ({ setUser }) => {
             //save user into browser memory (type 'window.localStorage' on the browser console)
             window.localStorage.setItem('userlogged', JSON.stringify(user))
             //set user logged in
-            setUser(user)
+            userStoreDispatcher({ type : 'SAVE_USER', payload : user})
             //set token
             blogService.setToken(user.token)
             //clear login form
