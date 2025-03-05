@@ -4,11 +4,13 @@ import BlogForm from './components/Add_Blog'
 import Login from './components/Login'
 import Logout from './components/Logout'
 import Notification from './components/Notifications'
+import UserInfo from './components/UsersInfo'
 import * as blogService from './services/blogs'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useContext } from 'react'
 import NotificationContext from './context/notificationContext'
 import UserContext from './context/userContext'
+import { Routes, Route, Link } from 'react-router-dom'
 
 const App = () => {
 //  const [user, setUser] = useState(null)
@@ -64,23 +66,31 @@ const App = () => {
         <>
           <Logout />
           
-          {blogFormVisible === false ? (
-              <div><br></br><button onClick={() => setBlogFormVisible(true)}>create new blog</button></div>
-          ) : (
-            <BlogForm 
-              setBlogFormVisible={setBlogFormVisible}
-              queryClient={queryClient}
-            />
-          )}
+          <Routes>
+            <Route path='/' element = {
+              <>
+                {blogFormVisible === false ? (
+                    <div><br></br><button onClick={() => setBlogFormVisible(true)}>create new blog</button></div>
+                ) : (
+                  <BlogForm 
+                    setBlogFormVisible={setBlogFormVisible}
+                    queryClient={queryClient}
+                  />
+                )}
 
-          {data.sort((a, b) => b.likes - a.likes).map(blog => 
-            <Blog 
-              key={blog.id} 
-              blog={blog}
-              nameOfUser={user.name}
-              queryClient={queryClient}
-            />
-            )}
+                {data.sort((a, b) => b.likes - a.likes).map(blog => (
+                  <Blog 
+                    key={blog.id} 
+                    blog={blog}
+                    nameOfUser={user.name}
+                    queryClient={queryClient}
+                  />
+                ))}
+             </>
+            } />
+            <Route path='/users' element={<UserInfo />} />
+          </Routes>
+
         </>
       )}
     </div>
