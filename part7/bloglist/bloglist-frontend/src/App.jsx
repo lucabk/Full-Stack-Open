@@ -11,6 +11,7 @@ import { useContext } from 'react'
 import NotificationContext from './context/notificationContext'
 import UserContext from './context/userContext'
 import { Routes, Route, Link } from 'react-router-dom'
+import UserBlogs from './components/UserBlogs'
 
 const App = () => {
 //  const [user, setUser] = useState(null)
@@ -89,6 +90,7 @@ const App = () => {
              </>
             } />
             <Route path='/users' element={<UserInfo />} />
+            <Route path='/users/:id' element={<UserBlogs />} />
           </Routes>
 
         </>
