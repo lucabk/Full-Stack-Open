@@ -2,6 +2,7 @@ import * as authService from '../services/authentication'
 import * as blogService from '../services/blogs'
 import UserContext from '../context/userContext'
 import { useContext } from 'react'
+import { Link } from 'react-router-dom'
 
 const Logout = () => {
     const [user, userDispatcher] = useContext(UserContext)
@@ -25,11 +26,24 @@ const Logout = () => {
         }
     }
 
+    const style = {
+        backgroundColor: 'lightgrey',
+        padding: '10px',
+        borderRadius: '5px'
+    }
+    const padding = {
+        paddingRight: 5
+    }
+
     return(
         <>
-            <h2>blogs</h2>
-            {user.name} logged in 
-            <button onClick={handleLogout}>logout</button>
+            <section style={style}>
+                <Link style={padding} to='/'>blogs</Link>
+                <Link style={padding} to='/users'>users</Link>
+                <span style={padding}>{user.name} logged in</span> 
+                <button style={padding} onClick={handleLogout}>logout</button>
+            </section>
+            <h1>blog app</h1>
         </>
     )
 }
