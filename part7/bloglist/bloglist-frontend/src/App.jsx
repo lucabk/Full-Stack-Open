@@ -10,7 +10,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useContext } from 'react'
 import NotificationContext from './context/notificationContext'
 import UserContext from './context/userContext'
-import { Routes, Route, Link } from 'react-router-dom'
+import SingleBlog from './components/SingleBlog'
+import { Routes, Route, Link, useMatch } from 'react-router-dom'
 import UserBlogs from './components/UserBlogs'
 
 const App = () => {
@@ -20,8 +21,7 @@ const App = () => {
   const [user, userDispatcher] = useContext(UserContext)
   // Initialize the query client
   const queryClient = useQueryClient()
-
-
+  
   //browser local storage
   useEffect(() => {
     //the application checks if user details of a logged-in user can already be found on the local storage
@@ -35,12 +35,21 @@ const App = () => {
     }
   }, [])
   
-
+  
   // Fetch blogs data using react-query
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['blogs'],
     queryFn: blogService.getAll
   })
+  
+  // Match the route to get the single blog id from the URL
+  const match = useMatch('/blogs/:id')
+  let singleBlog = null;
+  // Find the blog that matches the id from the URL
+  if(data){
+    singleBlog = match ? data.find(b => b.id === Number(match.params.id)) : null
+  }
+
   // Handle loading and error states
   if (isPending) {
     return <span>Loading blogs...</span>
@@ -54,7 +63,7 @@ const App = () => {
       }
     })
   }
-
+  
 
   //conditional rendering on login and blogs based on 'user' state
   return (
@@ -91,6 +100,7 @@ const App = () => {
             } />
             <Route path='/users' element={<UserInfo />} />
             <Route path='/users/:id' element={<UserBlogs />} />
+            <Route path='/blogs/:id' element={<SingleBlog singleBlog={singleBlog} queryClient={queryClient}/>} />
           </Routes>
 
         </>
