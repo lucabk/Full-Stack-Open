@@ -4,6 +4,7 @@ import * as blogService from '../services/blogs'
 import { useContext } from 'react'
 import NotificationContext from '../context/notificationContext'
 import UserContext from '../context/userContext'
+import { FormField, Button, Message, Form, Container, Header } from 'semantic-ui-react'
 
 const Login = () => {
     const [username, setUsername] = useState('')
@@ -40,29 +41,35 @@ const Login = () => {
     }
     
     return(
-        <form onSubmit={handleLogin}>
-            <div>
-                <h2>Login to application</h2>
-                username:
-                <input autoFocus
-                    type="text"
-                    name="Username"
-                    value={username}
-                    onChange={({target}) => setUsername(target.value)}
+        <Container className='mt-9' textAlign='center'>
+            <Header as='h2'>Login to application</Header>
+            <Form onSubmit={handleLogin}>
+                <FormField>
+                    <label>username</label>
+                    <input autoFocus
+                        type="text"
+                        name="Username"
+                        value={username}
+                        onChange={({target}) => setUsername(target.value)}
+                    />
+                </FormField>
+                <FormField>
+                    <label>password</label>
+                    <input
+                        type="password"
+                        name="Password"
+                        value={password}
+                        minLength='8'
+                        onChange={({target}) => setPassword(target.value)}
+                    />
+                </FormField>
+                <Message
+                    success
+                    header='Log in successfully'
                 />
-            </div>
-            <div>
-                password:
-                <input
-                    type="password"
-                    name="Password"
-                    value={password}
-                    minLength='8'
-                    onChange={({target}) => setPassword(target.value)}
-                />
-            </div>
-            <button type="submit">Login</button>
-        </form> 
+                <Button type="submit">Login</Button>
+            </Form> 
+        </Container >
     )    
 }
   

@@ -2,6 +2,7 @@ import * as blogService from '../services/blogs'
 import { useMutation } from '@tanstack/react-query'
 import { useContext } from 'react'
 import NotificationContext from '../context/notificationContext'
+import { Button, Container, Header } from 'semantic-ui-react'
 
 
 const SingleBlog = ({ singleBlog, queryClient }) => {
@@ -55,12 +56,12 @@ const SingleBlog = ({ singleBlog, queryClient }) => {
     }
 
     return (
-        <section>
-           <h2>{singleBlog.title} {singleBlog.author}</h2>
-           <p>{singleBlog.url}</p>
-           {singleBlog.likes} likes <button onClick={handleAddLike}>like</button>
-           <p>added by {singleBlog.user.name}</p>
-        </section>
+        <Container text>
+            <Header as='h2'>{singleBlog.title} <Header.Subheader>{singleBlog.author}</Header.Subheader></Header>
+            <p><a href={singleBlog.url}>{singleBlog.url}</a></p>
+            <p>{singleBlog.likes} likes <Button className="ui button" onClick={handleAddLike}>like</Button></p>
+            <p>added by <strong>{singleBlog.user.name}</strong></p>
+        </Container>
     )
 }
 

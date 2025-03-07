@@ -3,6 +3,7 @@ import * as blogService from '../services/blogs'
 import UserContext from '../context/userContext'
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { MenuItem, Menu, Button, Header } from 'semantic-ui-react'
 
 const Logout = () => {
     const [user, userDispatcher] = useContext(UserContext)
@@ -31,19 +32,28 @@ const Logout = () => {
         padding: '10px',
         borderRadius: '5px'
     }
-    const padding = {
-        paddingRight: 5
-    }
+
 
     return(
         <>
-            <section style={style}>
-                <Link style={padding} to='/'>blogs</Link>
-                <Link style={padding} to='/users'>users</Link>
-                <span style={padding}>{user.name} logged in</span> 
-                <button style={padding} onClick={handleLogout}>logout</button>
-            </section>
-            <h1>blog app</h1>
+            <Menu style={style}>
+                <MenuItem>
+                    <Link to='/'>blogs</Link>
+                </MenuItem>
+                <MenuItem>
+                    <Link to='/users'>users</Link>
+                </MenuItem>
+
+                <Menu.Menu position='right'>
+                    <MenuItem>
+                    < Header size='small'>{user.name}</Header>
+                    </MenuItem>
+                    <MenuItem>
+                        <Button secondary onClick={handleLogout}>logout</Button>
+                    </MenuItem>
+                </Menu.Menu>
+            </Menu>
+            <Header as='h1' textAlign='center'>blog app</Header>
         </>
     )
 }
