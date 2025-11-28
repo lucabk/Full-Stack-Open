@@ -1,10 +1,11 @@
-import type { ContentProps } from "../util/types"
+import type { CoursePart } from "../util/types"
+import Part from "./Part"
 
-const Content = ({ coursePart }: { coursePart: ContentProps }) => {
+const Content = ({ courseParts }: { courseParts: CoursePart[] }) => {
     return(
-        <p>
-            {coursePart.name} {coursePart.exerciseCount}
-        </p>
+        <>
+            {courseParts.map(p => <Part key={p.name} course={p}/>)}
+        </>
     )
 }
 
