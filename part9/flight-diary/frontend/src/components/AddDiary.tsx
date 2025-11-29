@@ -1,3 +1,4 @@
+import axios from "axios";
 import * as diaryService from "../service/diaryService" 
 import type { DiaryEntry, NewDiaryEntry, NonSensitiveDiaryEntry, Visibility, Weather } from "../util/types"
 import { toast } from 'react-toastify';
@@ -11,7 +12,7 @@ const AddDiary = ({ setEntries } : { setEntries : React.Dispatch<React.SetStateA
             weather : formData.get("weather") as Weather,
             visibility : formData.get("visibility") as Visibility,
         }
-        console.log(newEntry)
+        console.log("newEntry: ", newEntry)
         try{
             const diaryAdded : DiaryEntry = await diaryService.addDiary(newEntry)
             const nonSensitiveDiaryAdded : NonSensitiveDiaryEntry= {
@@ -23,8 +24,12 @@ const AddDiary = ({ setEntries } : { setEntries : React.Dispatch<React.SetStateA
             setEntries(prev => [...prev, nonSensitiveDiaryAdded])
             toast.success("Diary added!")
         }catch(error){
-            console.error("Error saving diary: ", error)
-            toast.error("Error adding diary")
+            if(axios.isAxiosError(error)){
+                toast.error(error.response?.data.split(".")[1])
+                console.error("Error saving diary: ", error)
+            }else{
+                console.error("Error saving diary: ", error)
+            }
         }
     }
 
@@ -36,12 +41,12 @@ const AddDiary = ({ setEntries } : { setEntries : React.Dispatch<React.SetStateA
                     <input type="text" name="date" required/>
                 </div>
                 <div>
-                    <label htmlFor="visibility">visibility</label>
-                    <input type="text" name="visibility" required/>
-                </div>
-                <div>
                     <label htmlFor="weather">weather</label>
                     <input type="text" name="weather" required/>
+                </div>
+                <div>
+                    <label htmlFor="visibility">visibility</label>
+                    <input type="text" name="visibility" required/>
                 </div>
                 <div>
                     <label htmlFor="comment">comment</label>
