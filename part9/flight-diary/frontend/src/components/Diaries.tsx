@@ -16,11 +16,11 @@ const Diaries = () => {
     
     return(
         <div>
-            <h1>Diaries</h1>
+            <h1 style={{textAlign: "center"}}>Diaries</h1>
             <h2>Add new entry</h2>
             <AddDiary setEntries={setEntries} />
 
-            <h2><strong>Diary Entries</strong></h2>
+            <h2 style={{marginTop : 50}}><strong>Diary Entries</strong></h2>
             {entries.map(e => <SingleDiary key={e.id} singlEntry={e}/>)}
         </div>
     )   
