@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
-import { patientEntry } from "../../types";
+import { Diagnosis, patientEntry } from "../../types";
 import patientService from "../../services/patients";
 import { Typography, Card, CardContent } from '@mui/material';
 
-const PatientInfo = ({ patientId } : { patientId : string | undefined}) => {
+interface PatientInfoProps {
+    patientId : string | undefined;
+    diagnoses : Diagnosis[];
+}
+
+const PatientInfo = ({ patientId, diagnoses } : PatientInfoProps) => {
 
     const [patientInfo, setPatientInfo] = useState<patientEntry|null>(null);
 
@@ -39,8 +44,8 @@ const PatientInfo = ({ patientId } : { patientId : string | undefined}) => {
                                     {e.date} <em>{e.description}</em>
                                     <ul>
                                         {e.diagnosisCodes?.map(code => (
-                                            <li>
-                                                {code}
+                                            <li key={code}>
+                                                {code} {diagnoses.find(d => d.code === code)?.name}
                                             </li>
                                         ))}
                                     </ul>
