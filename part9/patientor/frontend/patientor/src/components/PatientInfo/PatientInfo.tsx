@@ -26,11 +26,26 @@ const PatientInfo = ({ patientId } : { patientId : string | undefined}) => {
                         <Typography variant="h4" component="h2" gutterBottom>
                             {patientInfo.name}
                         </Typography>
-                        <Typography variant="body1">
+                        <Typography variant="body1" sx={{ mt:2 }}>
                             SSN: {patientInfo.ssn}
                         </Typography>
-                        <Typography variant="body1">
+                        <Typography variant="body1" sx={{ mt:1 }}>
                             Occupation: {patientInfo.occupation}
+                        </Typography>
+                        <Typography sx={{ mt:1 }}>
+                            <strong>entries</strong><br/>
+                            {patientInfo.entries.map(e => (
+                                <div key={e.id}>
+                                    {e.date} <em>{e.description}</em>
+                                    <ul>
+                                        {e.diagnosisCodes?.map(code => (
+                                            <li>
+                                                {code}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
                         </Typography>
                     </CardContent>
                 </Card>
