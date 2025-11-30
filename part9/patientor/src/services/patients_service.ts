@@ -1,5 +1,5 @@
 import patientsData from '../../data/patients'
-import { patientEntryFiltered, newPatientEntry } from '../types'
+import { patientEntryFiltered, newPatientEntry, patientEntry } from '../types'
 import { v1 as uuid } from 'uuid'
 
 const patients: patientEntryFiltered[] = patientsData as patientEntryFiltered[]//type assertion
@@ -15,9 +15,10 @@ const getPatients = ():patientEntryFiltered[] => {
 }
 
 //get single
-const getPatientById = (id:string):patientEntryFiltered|undefined => {
+const getPatientById = (id:string):patientEntry|undefined => {
     const entry = patients.find(p => p.id === id)
-    return entry
+    const singlePatien:patientEntry|undefined = entry ? {...entry, entries:[]} : undefined
+    return singlePatien
 }
 
 //post

@@ -41,10 +41,11 @@ The repository is organized into the following parts, each corresponding to diff
   - **anecdote**: New version of the anecdote voting application with React Router.
   - **blog list**: New version of the application with Redux, React Router, comments and styling.
 
-- **part9: TypeScript** (in progess..)
-  - **bmi**: first steps with TS.
-  - **Patientor**: A full-stack project integrating TypeScript in both frontend (React) and backend (Node.js and Express environment).
-  - **patientor-frontend**: https://github.com/lucabk/patientor-frontend 
+- **part9: TypeScript** 
+  - **bmi**: First steps with TS.
+  - **half-stack**: First React.ts app
+  - **flight-diary**: Simple full-stack diary app in TS 
+  - **Patientor**: A full-stack project integrating TypeScript in both frontend (React) and backend (Express) for patients management.
 
 - **part_13: Using relational databases**
   - Development of the blog list app backend with Express, Typescript, Docker, JWT and Sequelize
