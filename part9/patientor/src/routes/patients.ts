@@ -15,7 +15,7 @@ patientsRouter.get('/:id', (req, res) => {
     if(patient)
         res.status(200).send(patient)
     else
-        res.status(404).send('patient not found')
+        res.status(404).json({ error:'Patient not found' })
 })
 //POST
 patientsRouter.post('/', newPatientParser,(req: Request<unknown, unknown, newPatientEntry>, res: Response<newPatientEntry>) => {
