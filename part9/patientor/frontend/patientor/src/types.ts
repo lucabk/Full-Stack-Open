@@ -20,3 +20,17 @@ export interface Patient {
 }
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
+
+//Single patient
+export interface Entry {
+
+}
+export interface patientEntry{
+    id:string
+    name:string
+    dateOfBirth:string
+    ssn?:string
+    gender:Gender
+    occupation:string
+    entries:Entry[]
+}
